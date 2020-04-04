@@ -210,6 +210,15 @@ function ready() {
                 break;
             }
         }
+
+        // compile list of IDs into hidden input then submit.
+        var ids = [];
+        $(".js-index").each(function () {
+            ids.push($(this).val());
+        });
+        
+        $("#indexes").val(ids)
+
         return result; // return false to cancel form action
     });
 
@@ -397,10 +406,11 @@ function setHotString(id, backend) {
 }
 
 function newRow() {
-    newDiv = `<div class="w3-row-padding w3-padding-16" id="shortcut${index}">								\
-                <div class="w3-col l6 m12 s12">															\
-                        <div class="w3-row-padding">                                                    \
-                            <div class="w3-col m3 s6">                                                  \
+    newDiv = `<div class="w3-row-padding w3-padding-16" id="shortcut${index}">
+                <input type="hidden" value="${index}" class="js-index"/>	
+                <div class="w3-col l6 m12 s12">															
+                        <div class="w3-row-padding">                                                    
+                            <div class="w3-col m3 s6">                                                  
                                 <input type="text" placeholder="comment" name="comment${index}" id="comment${index}" class="fullWidth" oninput="markDirty()"/>                               \
                             </div>															            \
                             <div class="w3-col m2 s6">  												\
