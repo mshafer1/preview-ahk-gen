@@ -1,4 +1,32 @@
-$(window).load(init);
+try
+{
+    $(window).load(init);
+
+    // Create Element.remove() function if not exist
+    if (!('remove' in Element.prototype)) {
+        Element.prototype.remove = function() {
+            if (this.parentNode) {
+                this.parentNode.removeChild(this);
+            }
+        };
+    }
+
+    //Disable function - from https://stackoverflow.com/a/16788240
+    jQuery.fn.extend({
+        disable: function(state) {
+            console.log("disable " + state)
+            return this.each(function() {
+                var $this = $(this);
+                if ($this.is('input, button, textarea, select'))
+                    this.disabled = state;
+                else
+                    $this.toggleClass('disabled', state);
+            });
+        }
+    });
+} catch (error) {
+    // pass
+}
 
 var GET = {}
 var LOADED = false;
@@ -11,14 +39,7 @@ if (!String.prototype.includes) {
     };
 }
 
-// Create Element.remove() function if not exist
-if (!('remove' in Element.prototype)) {
-    Element.prototype.remove = function() {
-        if (this.parentNode) {
-            this.parentNode.removeChild(this);
-        }
-    };
-}
+
 
 function init() {
     ready()
@@ -96,9 +117,9 @@ function replaceAll(str, find, replace) { // from https://stackoverflow.com/a/11
 }
 
 function _load_get(location) {
+    var result = {}
     if (location.indexOf('?') !== -1) {
-        var query = document.location
-            .toString()
+        var query = location
             // get the query string
             .replace(/^.*?\?/, '')
             // and remove any existing hash string (thanks, @vrijdenker)
@@ -113,29 +134,30 @@ function _load_get(location) {
             //console.log(key)
             value = aux.replace(key + "=", "")
                 //console.log(value)
-            if (key in GET) {
-                if (GET[key].constructor === Array) {
-                    GET[key].push(value)
+            if (key in result) {
+                if (result[key].constructor === Array) {
+                    result[key].push(value)
                 } else {
-                    GET[key] = [GET[key], value]
+                    result[key] = [result[key], value]
                 }
             } else {
                 if (key.includes('[]')) {
                     //console.log("Array detected")
-                    GET[key] = [];
-                    GET[key].push(value)
+                    result[key] = [];
+                    result[key].push(value)
                 } else {
-                    GET[key] = value;
+                    result[key] = value;
                 }
-                //console.log(key + ":" + GET[key])
+                //console.log(key + ":" + result[key])
                 //console.log();
             }
         }
     }
+    return result;
 }
 
 function load_get() { //originally from https:///stackoverflow.com/a/12049737
-    _load_get(document.location.toString());
+    GET = _load_get(document.location.toString());
 }
 
 var CONFIG = {};
@@ -250,20 +272,6 @@ String.prototype.format = function() {
         return str;
     }
 }
-
-//Disable function - from https://stackoverflow.com/a/16788240
-jQuery.fn.extend({
-    disable: function(state) {
-        console.log("disable " + state)
-        return this.each(function() {
-            var $this = $(this);
-            if ($this.is('input, button, textarea, select'))
-                this.disabled = state;
-            else
-                $this.toggleClass('disabled', state);
-        });
-    }
-});
 
 index = 0;
 count = 0;
@@ -488,4 +496,14 @@ function scrollToTop() {
 function download() {
     console.log("downloading")
     document.getElementById('downloadLink').click()
+}
+
+
+try {
+    var exports = module.exports = {};
+    // from https://stackoverflow.com/a/11279639
+
+    exports._load_get = _load_get;
+} catch (error) {
+    // pass
 }
