@@ -95,8 +95,8 @@ function replaceAll(str, find, replace) { // from https://stackoverflow.com/a/11
     return str.replace(new RegExp(escapeRegExp(find), 'g'), replace);
 }
 
-function load_get() { //originally from https:///stackoverflow.com/a/12049737
-    if (document.location.toString().indexOf('?') !== -1) {
+function _load_get(location) {
+    if (location.indexOf('?') !== -1) {
         var query = document.location
             .toString()
             // get the query string
@@ -134,7 +134,12 @@ function load_get() { //originally from https:///stackoverflow.com/a/12049737
     }
 }
 
+function load_get() { //originally from https:///stackoverflow.com/a/12049737
+    _load_get(document.location.toString());
+}
+
 var CONFIG = {};
+
 
 function parse_get() {
     //CONFIG['length'] = GET['length']
