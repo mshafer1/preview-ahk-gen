@@ -1,10 +1,9 @@
-try
-{
+try {
     $(window).load(init);
 
     // Create Element.remove() function if not exist
     if (!('remove' in Element.prototype)) {
-        Element.prototype.remove = function() {
+        Element.prototype.remove = function () {
             if (this.parentNode) {
                 this.parentNode.removeChild(this);
             }
@@ -13,9 +12,9 @@ try
 
     //Disable function - from https://stackoverflow.com/a/16788240
     jQuery.fn.extend({
-        disable: function(state) {
+        disable: function (state) {
             console.log("disable " + state)
-            return this.each(function() {
+            return this.each(function () {
                 var $this = $(this);
                 if ($this.is('input, button, textarea, select'))
                     this.disabled = state;
@@ -33,7 +32,7 @@ var LOADED = false;
 
 // from https://stackoverflow.com/a/31221374/8100990
 if (!String.prototype.includes) {
-    String.prototype.includes = function() {
+    String.prototype.includes = function () {
         'use strict';
         return String.prototype.indexOf.apply(this, arguments) !== -1;
     };
@@ -54,15 +53,15 @@ function init() {
         $('#btnDownload').disable(false);
 
         $.getScript("scripts/keygen.js", loaded)
-            // build form from GET
-            //console.log(GET)
-            //console.log(CONFIG)
+        // build form from GET
+        //console.log(GET)
+        //console.log(CONFIG)
         num_keys = GET['length'];
         //console.log(num_keys)
         for (i = 0; i < num_keys; i++) {
             newRow();
             $('#func' + i + CONFIG[i]['func']).prop("checked", true)
-                //console.log(CONFIG[i]['func'])
+            //console.log(CONFIG[i]['func'])
 
             if ('comment' in CONFIG[i]) {
                 $('#comment' + i).val(CONFIG[i]['comment'])
@@ -74,8 +73,8 @@ function init() {
                 //console.log(CONFIG[i]['skeyValue'])
                 $('#skey' + i + 'key').val(CONFIG[i]['skeyValue'])
                 modifiers = CONFIG[i]['modifiers[]']
-                    //console.log(modifiers)
-                modifiers.forEach(function(entry) {
+                //console.log(modifiers)
+                modifiers.forEach(function (entry) {
                     //console.log('#skey' + i + entry)
                     $('#skey' + i + entry).prop("checked", true)
                 })
@@ -129,11 +128,11 @@ function _load_get(location) {
 
         for (var i = 0, l = query.length; i < l; i++) {
             aux = decodeURIComponent(query[i])
-                //console.log(aux)
+            //console.log(aux)
             key = aux.match(/([\d\D]+?\=)/)[0].replace('=', '');
             //console.log(key)
             value = aux.replace(key + "=", "")
-                //console.log(value)
+            //console.log(value)
             if (key in result) {
                 if (result[key].constructor === Array) {
                     result[key].push(value)
@@ -162,71 +161,75 @@ function load_get() { //originally from https:///stackoverflow.com/a/12049737
 
 var CONFIG = {};
 
-
-function parse_get() {
-    //CONFIG['length'] = GET['length']
-    num_keys = GET['length'];
-    if (num_keys * 4 > Object.keys(GET).length)
-    {
-        console.log("Num Keys: " + num_keys + "\n  Get.Length: " + GET.Length)
-        console.log(GET)
+function _parse_get(get_arr) {
+    var result = {};
+    //result['length'] = get_arr['length']
+    var num_keys = get_arr['length'];
+    if (num_keys * 4 > Object.keys(get_arr).length) {
+        console.log("Num Keys: " + num_keys + "\n  Get.Length: " + get_arr.Length)
+        console.log(get_arr)
         // error, display warning and leave
         return;
     }
-    for (i = 0, k = 0; i < GET['length']; k++) {
-        if ('func' + k in GET) {
-            CONFIG[i] = {
-                'func': GET['func' + k],
-                'option': GET['option' + k],
-                'skeyValue': GET['skeyValue' + k]
+    for (i = 0, k = 0; i < get_arr['length']; k++) {
+        if ('func' + k in get_arr) {
+            result[i] = {
+                'func': get_arr['func' + k],
+                'option': get_arr['option' + k],
+                'skeyValue': get_arr['skeyValue' + k]
             }
 
-            if (CONFIG[i]['func'] == 'KEY') {
+            if (result[i]['func'] == 'KEY') {
                 // hotkey
-                if ('skey' + k + '[]' in GET) {
-                    CONFIG[i]['modifiers[]'] = GET['skey' + k + '[]']
+                if ('skey' + k + '[]' in get_arr) {
+                    result[i]['modifiers[]'] = get_arr['skey' + k + '[]']
                 } else {
-                    CONFIG[i]['modifiers[]'] = []
-                        //console.log("empty list")
+                    result[i]['modifiers[]'] = []
+                    //console.log("empty list")
                 }
 
             } else {
                 // hotstring - nothing more in this case
             }
 
-            option = GET['option' + k]
+            var option = get_arr['option' + k]
 
             if (option == 'Send' || option == 'SendUnicodeChar') {
-                CONFIG[i]['input'] = GET['input' + k]
+                result[i]['input'] = get_arr['input' + k]
 
             } else if (option == "ActivateOrOpen" || option == 'ActivateOrOpenChrome') {
-                CONFIG[i]['Program'] = GET['Program' + k]
-                CONFIG[i]['Window'] = GET['Window' + k]
+                result[i]['Program'] = get_arr['Program' + k]
+                result[i]['Window'] = get_arr['Window' + k]
 
             } else if (option == "Replace") {
-                CONFIG[i]['input'] = GET['input' + k]
+                result[i]['input'] = get_arr['input' + k]
 
             } else if (option == 'Custom') {
-                CONFIG[i]['Code'] = GET['Code' + k]
+                result[i]['Code'] = get_arr['Code' + k]
             } else if (option == 'OpenConfig') {
                 // NOOP
             }
 
-            if ('comment' + k in GET && GET['comment' + k].length > 0) {
+            if ('comment' + k in get_arr && get_arr['comment' + k].length > 0) {
                 // console.log("Comment in " + i)
-                CONFIG[i]['comment'] = GET['comment' + k]
-                    // console.log(CONFIG)
+                result[i]['comment'] = get_arr['comment' + k]
+                // console.log(result)
             }
 
             i++
         }
     }
+    return result;
+}
+
+function parse_get() {
+    CONFIG = _parse_get(GET);
 }
 
 function ready() {
     //newRow();
     // console.log("Registering for check")
-    $('#hotkeyForm').submit(function() {
+    $('#hotkeyForm').submit(function () {
         // console.log("Checking for submit")
         result = true;
         for (var i = 0; i < count; i++) {
@@ -243,14 +246,14 @@ function ready() {
         $(".js-index").each(function () {
             ids.push($(this).val());
         });
-        
+
         $("#indexes").val(ids)
 
         return result; // return false to cancel form action
     });
 
     //if clicking anywhere but on dropdown, close it.
-    $(document).bind('click', function(e) { //from http://stackoverflow.com/a/15098861
+    $(document).bind('click', function (e) { //from http://stackoverflow.com/a/15098861
         if ($(e.target).closest('.w3-dropdown-click').length === 0) {
             $(".w3-dropdown-content").removeClass("w3-show").removeClass("on-top"); //hide all - make sure none of the others are open
             $(".fa-caret-right").removeClass("fa-rotate-90");
@@ -264,7 +267,7 @@ function handleClick(ev) {
 }
 
 //from http://stackoverflow/a/20729945
-String.prototype.format = function() {
+String.prototype.format = function () {
     var str = this;
     for (var i = 0; i < arguments.length; i++) {
         var reg = new RegExp("\\{" + i + "\\}", "gm");
@@ -302,23 +305,23 @@ function select(item, id, backend) {
 					"<input id="program{0}" type="text" name="Program{0}" placeholder="Program"  class="keyWidth"  oninput="markDirty()" required/>")\
 					<input type="hidden" value="ActivateOrOpen" name="option{0}" id="option{0}"/>'.format(id))
 
-        $("#program" + id).click(function(event) {
+        $("#program" + id).click(function (event) {
             event.stopPropagation();
         });
-        $("#window" + id).click(function(event) {
+        $("#window" + id).click(function (event) {
             event.stopPropagation();
         });
     } else if (item == 'Send') {
         $('#function' + id).html('Send( "<input name="input{0}"  id="input{0}" type="text" placeholder="input"  oninput="markDirty()" required/>")\
 					<input type="hidden" value="Send" name="option{0}" id="option{0}"/>'.format(id))
 
-        $("#input" + id).click(function(event) {
+        $("#input" + id).click(function (event) {
             event.stopPropagation();
         });
     } else if (item == 'Replace') {
         $('#function' + id).html('Replace( "<input type="text" name="input{0}" id="input{0}" placeholder="input"  oninput="markDirty()" required/>")\
 					<input type="hidden" value="Replace" name="option{0}" id="option{0}"/>'.format(id))
-        $("#input" + id).click(function(event) {
+        $("#input" + id).click(function (event) {
             event.stopPropagation();
         });
     } else if (item == 'ActivateOrOpenChrome') {
@@ -327,24 +330,24 @@ function select(item, id, backend) {
 					"<input id="program{0}" type="text" name="Program{0}" placeholder="URL"  class="keyWidth"  oninput="markDirty()" required/>")\
 					<input type="hidden" value="ActivateOrOpenChrome" name="option{0}" id="option{0}"/>'.format(id))
 
-        $("#program" + id).click(function(event) {
+        $("#program" + id).click(function (event) {
             event.stopPropagation();
         });
-        $("#window" + id).click(function(event) {
+        $("#window" + id).click(function (event) {
             event.stopPropagation();
         });
     } else if (item == 'Custom') {
         $('#function' + id).html('Custom: <textarea name="Code{0}"  id="code{0}" placeholder="code" class="codeArea"  oninput="markDirty()" required/>)\
 					<input type="hidden" value="Custom" name="option{0}" id="option{0}"/>'.format(id))
 
-        $("#code" + id).click(function(event) {
+        $("#code" + id).click(function (event) {
             event.stopPropagation();
         });
     } else if (item == 'SendUnicodeChar') {
         $('#function' + id).html('SendUnicodeChar(<input name="input{0}"  id="input{0}" type="text" placeholder="0x000" class="keyWidth"  oninput="markDirty()" required/>)\
 					<input type="hidden" value="SendUnicodeChar" name="option{0}" id="option{0}"/>'.format(id))
 
-        $("#input" + id).click(function(event) {
+        $("#input" + id).click(function (event) {
             event.stopPropagation();
         });
     } else if (item == 'OpenConfig') {
@@ -473,7 +476,7 @@ function loaded() {
     //console.log("seeting url")
     script = keygen(CONFIG)
     $('#downloadLink').attr('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(script))
-        //setTimeout(download, 500)
+    //setTimeout(download, 500)
     $('#scriptZone').html('<p><pre><code class="autohotkey">' + script + '</code></pre></p>')
     $('#skipToScript').removeClass("w3-hide");
     $('#scriptZone').removeClass("w3-hide");
@@ -500,10 +503,12 @@ function download() {
 
 
 try {
-    var exports = module.exports = {};
     // from https://stackoverflow.com/a/11279639
+    // if module is availble, we must be getting included via a 'require', export methods
+    var exports = module.exports = {};
 
     exports._load_get = _load_get;
+    exports._parse_get = _parse_get;
 } catch (error) {
     // pass
 }
