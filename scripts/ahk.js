@@ -162,7 +162,7 @@ function load_get() { //originally from https:///stackoverflow.com/a/12049737
 var CONFIG = {};
 
 function _handle_segment(i) {
-    
+
 }
 
 function _handle_length(get_arr) {
@@ -172,56 +172,57 @@ function _handle_length(get_arr) {
         console.log("Num Keys: " + num_keys + "\n  Get.Length: " + get_arr.Length)
         console.log(get_arr)
         // error, display warning and leave
-        result['ERROR'] = `Insufficient data, expecting at least ${num_keys*4} values. Got (${get_arr})`
+        result['ERROR'] = `Insufficient data, expecting at least ${num_keys * 4} values. Got (${get_arr})`
         return result;
     }
     for (i = 0, k = 0; i < get_arr['length']; k++) {
-        if ('func' + k in get_arr) {
-            result[i] = {
-                'func': get_arr['func' + k],
-                'option': get_arr['option' + k],
-                'skeyValue': get_arr['skeyValue' + k]
-            }
-
-            if (result[i]['func'] == 'KEY') {
-                // hotkey
-                if ('skey' + k + '[]' in get_arr) {
-                    result[i]['modifiers[]'] = get_arr['skey' + k + '[]']
-                } else {
-                    result[i]['modifiers[]'] = []
-                    //console.log("empty list")
-                }
-
-            } else {
-                // hotstring - nothing more in this case
-            }
-
-            var option = get_arr['option' + k]
-
-            if (option == 'Send' || option == 'SendUnicodeChar') {
-                result[i]['input'] = get_arr['input' + k]
-
-            } else if (option == "ActivateOrOpen" || option == 'ActivateOrOpenChrome') {
-                result[i]['Program'] = get_arr['Program' + k]
-                result[i]['Window'] = get_arr['Window' + k]
-
-            } else if (option == "Replace") {
-                result[i]['input'] = get_arr['input' + k]
-
-            } else if (option == 'Custom') {
-                result[i]['Code'] = get_arr['Code' + k]
-            } else if (option == 'OpenConfig') {
-                // NOOP
-            }
-
-            if ('comment' + k in get_arr && get_arr['comment' + k].length > 0) {
-                // console.log("Comment in " + i)
-                result[i]['comment'] = get_arr['comment' + k]
-                // console.log(result)
-            }
-
-            i++
+        if (!('func' + k in get_arr)) {
+            continue;
         }
+        result[i] = {
+            'func': get_arr['func' + k],
+            'option': get_arr['option' + k],
+            'skeyValue': get_arr['skeyValue' + k]
+        }
+
+        if (result[i]['func'] == 'KEY') {
+            // hotkey
+            if ('skey' + k + '[]' in get_arr) {
+                result[i]['modifiers[]'] = get_arr['skey' + k + '[]']
+            } else {
+                result[i]['modifiers[]'] = []
+                //console.log("empty list")
+            }
+
+        } else {
+            // hotstring - nothing more in this case
+        }
+
+        var option = get_arr['option' + k]
+
+        if (option == 'Send' || option == 'SendUnicodeChar') {
+            result[i]['input'] = get_arr['input' + k]
+
+        } else if (option == "ActivateOrOpen" || option == 'ActivateOrOpenChrome') {
+            result[i]['Program'] = get_arr['Program' + k]
+            result[i]['Window'] = get_arr['Window' + k]
+
+        } else if (option == "Replace") {
+            result[i]['input'] = get_arr['input' + k]
+
+        } else if (option == 'Custom') {
+            result[i]['Code'] = get_arr['Code' + k]
+        } else if (option == 'OpenConfig') {
+            // NOOP
+        }
+
+        if ('comment' + k in get_arr && get_arr['comment' + k].length > 0) {
+            // console.log("Comment in " + i)
+            result[i]['comment'] = get_arr['comment' + k]
+            // console.log(result)
+        }
+
+        i++
     }
     return result;
 }
