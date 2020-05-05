@@ -1,0 +1,295 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`_load_get takes a basic query and returns expected data 1`] = `
+Object {
+  "comment0": "",
+  "func0": "KEY",
+  "input0": "b",
+  "length": "1",
+  "option0": "Replace",
+  "skeyValue0": "a",
+}
+`;
+
+exports[`_load_get takes data in regardless of values 1`] = `
+Object {
+  "comment5": "",
+  "func5": "KEY",
+  "input5": "b",
+  "length": "1",
+  "option5": "Replace",
+  "skeyValue5": "a",
+}
+`;
+
+exports[`_parse_get takes a basic config and returns expected:: packs values down to lowest index 1`] = `
+Object {
+  "0": Object {
+    "func": "KEY",
+    "input": "b",
+    "modifiers[]": Array [],
+    "option": "Send",
+    "skeyValue": "a",
+  },
+}
+`;
+
+exports[`_parse_get takes a basic config and returns expected:: packs values down to lowest index 2`] = `
+Object {
+  "ERROR": "Missing 'indexes' parameter",
+}
+`;
+
+exports[`_parse_get takes a basic config and returns expected:: parses a Custom correctly 1`] = `
+Object {
+  "0": Object {
+    "Code": "send, a",
+    "func": "KEY",
+    "modifiers[]": Array [],
+    "option": "Custom",
+    "skeyValue": "b",
+  },
+}
+`;
+
+exports[`_parse_get takes a basic config and returns expected:: parses a Custom correctly 2`] = `
+Object {
+  "ERROR": "Missing 'indexes' parameter",
+}
+`;
+
+exports[`_parse_get takes a basic config and returns expected:: parses a Send Unicode Char correctly 1`] = `
+Object {
+  "0": Object {
+    "func": "KEY",
+    "input": "0x00A2",
+    "modifiers[]": Array [],
+    "option": "SendUnicodeChar",
+    "skeyValue": "b",
+  },
+}
+`;
+
+exports[`_parse_get takes a basic config and returns expected:: parses a Send Unicode Char correctly 2`] = `
+Object {
+  "0": Object {
+    "Program": "pandora.com",
+    "Window": "pandora",
+    "func": "KEY",
+    "modifiers[]": Array [],
+    "option": "ActivateOrOpenChrome",
+    "skeyValue": "b",
+  },
+}
+`;
+
+exports[`_parse_get takes a basic config and returns expected:: parses a Send Unicode Char correctly 3`] = `
+Object {
+  "0": Object {
+    "Program": "pandora.com",
+    "Window": "pandora",
+    "func": "KEY",
+    "modifiers[]": Array [],
+    "option": "ActivateOrOpenChrome",
+    "skeyValue": "b",
+  },
+}
+`;
+
+exports[`_parse_get takes a basic config and returns expected:: parses a Send Unicode Char correctly 4`] = `
+Object {
+  "ERROR": "Missing 'indexes' parameter",
+}
+`;
+
+exports[`_parse_get takes a basic config and returns expected:: parses a basic replace correctly 1`] = `
+Object {
+  "0": Object {
+    "func": "KEY",
+    "input": "b",
+    "modifiers[]": Array [],
+    "option": "Replace",
+    "skeyValue": "a",
+  },
+}
+`;
+
+exports[`_parse_get takes a basic config and returns expected:: parses a basic replace correctly 2`] = `
+Object {
+  "ERROR": "Missing 'indexes' parameter",
+}
+`;
+
+exports[`_parse_get takes a basic config and returns expected:: parses a basic send value correctly 1`] = `
+Object {
+  "0": Object {
+    "func": "KEY",
+    "input": "b",
+    "modifiers[]": Array [],
+    "option": "Send",
+    "skeyValue": "a",
+  },
+}
+`;
+
+exports[`_parse_get takes a basic config and returns expected:: parses a basic send value correctly 2`] = `Object {}`;
+
+exports[`_parse_get takes a basic config and returns expected:: parses a group modifier keys correctly (ctrl, alt) 1`] = `
+Object {
+  "0": Object {
+    "func": "KEY",
+    "input": "b",
+    "modifiers[]": Array [
+      "CTRL",
+      "ALT",
+    ],
+    "option": "Send",
+    "skeyValue": "a",
+  },
+}
+`;
+
+exports[`_parse_get takes a basic config and returns expected:: parses a group modifier keys correctly (ctrl, alt) 2`] = `
+Object {
+  "ERROR": "Missing 'indexes' parameter",
+}
+`;
+
+exports[`_parse_get takes a basic config and returns expected:: parses a group modifier keys correctly (ctrl, alt, shift, win) 1`] = `
+Object {
+  "0": Object {
+    "func": "KEY",
+    "input": "b",
+    "modifiers[]": Array [
+      "CTRL",
+      "SHIFT",
+      "ALT",
+      "WIN",
+    ],
+    "option": "Send",
+    "skeyValue": "a",
+  },
+}
+`;
+
+exports[`_parse_get takes a basic config and returns expected:: parses a group modifier keys correctly (ctrl, alt, shift, win) 2`] = `
+Object {
+  "ERROR": "Missing 'indexes' parameter",
+}
+`;
+
+exports[`_parse_get takes a basic config and returns expected:: parses a modifier keys correctly (alt) 1`] = `
+Object {
+  "0": Object {
+    "func": "KEY",
+    "input": "b",
+    "modifiers[]": Array [
+      "ALT",
+    ],
+    "option": "Send",
+    "skeyValue": "a",
+  },
+}
+`;
+
+exports[`_parse_get takes a basic config and returns expected:: parses a modifier keys correctly (alt) 2`] = `
+Object {
+  "ERROR": "Missing 'indexes' parameter",
+}
+`;
+
+exports[`_parse_get takes a basic config and returns expected:: parses a modifier keys correctly (ctrl) 1`] = `
+Object {
+  "0": Object {
+    "func": "KEY",
+    "input": "b",
+    "modifiers[]": Array [
+      "CTRL",
+    ],
+    "option": "Send",
+    "skeyValue": "a",
+  },
+}
+`;
+
+exports[`_parse_get takes a basic config and returns expected:: parses a modifier keys correctly (ctrl) 2`] = `
+Object {
+  "ERROR": "Missing 'indexes' parameter",
+}
+`;
+
+exports[`_parse_get takes a basic config and returns expected:: parses a modifier keys correctly (shift) 1`] = `
+Object {
+  "0": Object {
+    "func": "KEY",
+    "input": "b",
+    "modifiers[]": Array [
+      "SHIFT",
+    ],
+    "option": "Send",
+    "skeyValue": "a",
+  },
+}
+`;
+
+exports[`_parse_get takes a basic config and returns expected:: parses a modifier keys correctly (shift) 2`] = `
+Object {
+  "ERROR": "Missing 'indexes' parameter",
+}
+`;
+
+exports[`_parse_get takes a basic config and returns expected:: parses a modifier keys correctly (win) 1`] = `
+Object {
+  "0": Object {
+    "func": "KEY",
+    "input": "b",
+    "modifiers[]": Array [
+      "WIN",
+    ],
+    "option": "Send",
+    "skeyValue": "a",
+  },
+}
+`;
+
+exports[`_parse_get takes a basic config and returns expected:: parses a modifier keys correctly (win) 2`] = `
+Object {
+  "ERROR": "Missing 'indexes' parameter",
+}
+`;
+
+exports[`_parse_get takes a basic config and returns expected:: parses an Activate Or Open correctly 1`] = `
+Object {
+  "0": Object {
+    "Program": "chrome.exe",
+    "Window": "ahk_exe chrome.exe",
+    "func": "KEY",
+    "modifiers[]": Array [],
+    "option": "ActivateOrOpen",
+    "skeyValue": "a",
+  },
+}
+`;
+
+exports[`_parse_get takes a basic config and returns expected:: parses an Activate Or Open correctly 2`] = `
+Object {
+  "ERROR": "Missing 'indexes' parameter",
+}
+`;
+
+exports[`_parse_get takes a basic config and returns expected:: parses an OpenConfig correctly 1`] = `
+Object {
+  "0": Object {
+    "func": "KEY",
+    "modifiers[]": Array [],
+    "option": "OpenConfig",
+    "skeyValue": "b",
+  },
+}
+`;
+
+exports[`_parse_get takes a basic config and returns expected:: parses an OpenConfig correctly 2`] = `
+Object {
+  "ERROR": "Missing 'indexes' parameter",
+}
+`;
