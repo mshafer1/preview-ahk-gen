@@ -1,0 +1,5 @@
+{
+    "scripts": {
+        "coveralls": "jest --coverage | coveralls"
+    }
+}
