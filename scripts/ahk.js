@@ -50,14 +50,17 @@ function _debug_log() {
 function init() {
     ready()
     load_get()
-    console.log(GET)
-    if (GET.length == 0) {
+    parse_get();
+    console.log("GET: ", GET)
+    console.log("CONFIG: ", CONFIG)
+    num_keys = Object.keys(CONFIG).length;
+    if (num_keys == 0) {
         _debug_log("New row")
         newRow()
         return;
     }
     ga('send', 'event', { eventCategory: 'AHK', eventAction: 'Post', eventLabel: 'Post', eventValue: 1 });
-    parse_get();
+    
 
     //disable submit
     $('#btnSubmit').disable(true);
@@ -67,8 +70,8 @@ function init() {
     // build form from GET
     _debug_log("GET: ", GET)
     _debug_log("CONFIG: ", CONFIG)
-    num_keys = GET['length'];
-    _debug_log(num_keys)
+   
+    console.log("Num Keys: ", num_keys)
     for (i = 0; i < num_keys; i++) {
         newRow();
         $('#func' + i + CONFIG[i]['func']).prop("checked", true)
@@ -275,7 +278,7 @@ function _handle_indexes(get_arr) {
 
         result[i] = _parts[1];
     }
-    result['length'] = Object.keys(result).length;
+    // result['length'] = Object.keys(result).length;
     return result;
 }
 
