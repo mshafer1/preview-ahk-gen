@@ -11,27 +11,25 @@ body {
     z-index: 100!important;
 }
 
-.footer > footer {
-    position: fixed!important; 
-    bottom: 0px!important; 
+.footer>footer {
+    position: fixed!important;
+    bottom: 0px!important;
     left: 0px!important;
     z-index: 100!important;
     width: 100%;
 }
 
-
 /* w3-css small screen point */
+
 @media only screen and (max-width:601px) {
-    .footer > footer {
+    .footer>footer {
         position: static!important;
         margin-top: 32px;
     }
-
-    .footer > #bottom_padding {
+    .footer>#bottom_padding {
         display: none!important;
     }
 }
-
 
 .onTop {
     z-index: 100;
@@ -78,7 +76,11 @@ body {
     }
 }
 
-.placeholder { height: 3.0em; line-height: 1.2em; border: 1px dashed black;}
+.placeholder {
+    height: 3em;
+    line-height: 1.2em;
+    border: 1px dashed black;
+}
 
 .draggabble_handle {
     cursor: -webkit-grab;
