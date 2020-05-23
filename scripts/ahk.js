@@ -350,6 +350,10 @@ function ready() {
             $(".fa-caret-right").removeClass("fa-rotate-90");
         }
     });
+
+    $('#hotkeyRegion').sortable({
+        update: function( event, ui ) {markDirty()}
+      });
 }
 
 function handleClick(ev) {
