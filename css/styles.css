@@ -77,3 +77,5 @@ body {
         display: none!important;
     }
 }
+
+.placeholder { height: 3.0em; line-height: 1.2em; border: 1px dashed black;}

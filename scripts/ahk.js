@@ -120,6 +120,11 @@ function init() {
             $('#code' + i).val(CONFIG[i]['Code'])
         }
     }
+
+    $('#hotkeyRegion').sortable({
+        placeholder: 'placeholder',
+        update: function( event, ui ) {markDirty()},
+      });
 }
 
 function escapeRegExp(str) { // from https://stackoverflow.com/a/1144788/8100990
@@ -350,10 +355,6 @@ function ready() {
             $(".fa-caret-right").removeClass("fa-rotate-90");
         }
     });
-
-    $('#hotkeyRegion').sortable({
-        update: function( event, ui ) {markDirty()}
-      });
 }
 
 function handleClick(ev) {
@@ -506,17 +507,23 @@ function genHotkeyRegion(id) {
 
 function setHotString(id, backend) {
     console.log("configuring #optionsShortcut" + id)
-    $('#optionsShortcut' + id).html('<div class="w3-col s6">
+    $('#optionsShortcut' + id).html(`<div class="w3-col s6">
 												<input type="text" id="skey{0}string" placeholder="string" name="skeyValue{0}" onchange="markDirty()" required/>
-                                            </div>'.format(id))
+                                            </div>`.format(id))
     if (!backend) {
         markDirty()
     }
 }
 
 function newRow() {
-    newDiv = `<div class="w3-row-padding w3-padding-16" id="shortcut${index}">
-                <input type="hidden" value="${index}" class="js-index"/>	
+    newDiv = `<div class="w3-container" style="display:relative">
+                <div style="width: 15px; display:inline-block; position:absolute; margin-top:15px; margin-left:8px;">
+                    <i class="fas fa-grip-vertical"></i>
+                </div>
+                <div style="display:inline-block position:abosolute; left:15px; right:0px; width:100%;">
+            <div class="w3-row-padding w3-padding-16" id="shortcut${index}">
+                <input type="hidden" value="${index}" class="js-index"/>
+                
                 <div class="w3-col l6 m12 s12">															
                         <div class="w3-row-padding">                                                    
                             <div class="w3-col m3 s6">                                                  
@@ -553,11 +560,11 @@ function newRow() {
                                 </div>
                         </div>
                         <div class="w3-col l1 m4 s2">
-                            <button type="button" onclick="destroy(\'${index}\')" class="w3-btn w3-margin-left w3-margin-right" id="destroy${index}"><i class="fa fa-times-circle-o" title="Delete hotkey"></i></button>
+                            <button type="button" onclick="destroy(\'${index}\')" class="w3-btn w3-margin-left w3-margin-right" id="destroy${index}"><i class="far fa-times-circle" title="Delete hotkey"></i></button>
                         </div>
                     </div>
                 </div>
-            </div>`;
+            </div></div></div>`;
     index += 1;
 
     $('#hotkeyRegion').append(newDiv)
