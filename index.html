@@ -10,11 +10,6 @@ layout: basic
     <option value="WheelUp">
     <option value="Escape">
 </datalist>
-<div id="skipToScript" class="w3-row w3-hide w3-padding-bottom">
-    <div class="w3-col s12">
-        <button class="w3-btn" style="float:right;" onclick="scrollToCode();">Skip to code region</button>
-    </div>
-</div>
 <form id="hotkeyForm">
     <input type="hidden" id="indexes" name="indexes" value="" />
     <div class="w3-row w3-dark-grey w3-center">
@@ -23,6 +18,12 @@ layout: basic
         </div>
         <div class="w3-col m6 w3-hide-small">
             Action
+        </div>
+    </div>
+    <div id="skipToScript" class="w3-row w3-hide w3-margin">
+        <div class="w3-col s12">
+            <button type="button" class="w3-btn" style="float:left;" onclick="scrollToCode();">Skip to script
+                region</button>
         </div>
     </div>
     <div id="hotkeyRegion">
