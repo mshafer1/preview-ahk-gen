@@ -105,6 +105,7 @@ function _debug_log() {
 function init() {
     window.onpopstate = _handle_pop_state; // lazy do this so that jest doesn't encounter it
     DEBUG_LOGGING_ENABLED = FEATURE_TOGGLES.DEBUG_LOGGING
+    EAGER_COMPILE_ENABLED = FEATURE_TOGGLES.EAGER_COMPILE
     ready()
     load_get()
     parse_get();
