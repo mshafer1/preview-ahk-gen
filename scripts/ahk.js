@@ -99,13 +99,14 @@ function _debug_log() {
         return; // NO-OP
     }
 
-    console.debug(...arguments);
+    console.info(...arguments);
 }
 
 function init() {
     window.onpopstate = _handle_pop_state; // lazy do this so that jest doesn't encounter it
     DEBUG_LOGGING_ENABLED = FEATURE_TOGGLES.DEBUG_LOGGING
     EAGER_COMPILE_ENABLED = FEATURE_TOGGLES.EAGER_COMPILE
+    _debug_log("Debug logging enabled");
     ready()
     load_get()
     parse_get();
@@ -613,9 +614,11 @@ function destroy(id) {
 
 function setHotKey(id, backend) {
     $('#optionsShortcut' + id).html(genHotkeyRegion(id))
-    console.log("Registering donetyping");
-    // TODO: use $(this)??
-    $(`#skey${id}key`).donetyping(function () { markDirty(); eager_compile($(this).attr('id'), id, `skeyValue`); })
+    if (EAGER_COMPILE_ENABLED) {
+        console.log("Registering donetyping");
+        // TODO: use $(this)??
+        $(`#skey${id}key`).donetyping(function () { markDirty(); eager_compile($(this).attr('id'), id, `skeyValue`); })
+    }
     if (!backend) {
         markDirty()
     }
@@ -638,7 +641,7 @@ function genHotkeyRegion(id) {
             </div>
             <div class="w3-row w3-col s6">
                 <div class="w3-col s12">
-                    <input type="text" placeholder="key" id="skey{0}key"  name="skeyValue{0}" class="keyWidth"  autocomplete="off"  list="specialKeys" title="Set the key to hit (special keys are available for autocomplete" required/>
+                    <input type="text" placeholder="key" id="skey{0}key" ${ (EAGER_COMPILE_ENABLED) ? '' : 'oninput="markDirty()"'} name="skeyValue{0}" class="keyWidth"  autocomplete="off"  list="specialKeys" title="Set the key to hit (special keys are available for autocomplete" required/>
                 </div>
             </div>`.format(id);
 }
