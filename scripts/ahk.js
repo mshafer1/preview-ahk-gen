@@ -714,15 +714,14 @@ function newRow() {
 function loaded() {
     _debug_log("seeting url")
     script = keygen(CONFIG)
-    $('#downloadLink').attr('href', DOWNLOAD_FILE_HEADER + encodeURIComponent(script))
     _setup_download(CONFIG);
 }
 
 function _setup_download(configuration) {
     _debug_log("seeting url");
     script = keygen(configuration);
-    $('#downloadLink').attr('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(script));
-    //setTimeout(download, 500)
+    $('#downloadLink').attr('href', DOWNLOAD_FILE_HEADER + encodeURIComponent(script));
+
     $('#scriptZone').html('<p><pre><code class="autohotkey">' + script + '</code></pre></p>');
     $('#skipToScript').removeClass("w3-hide");
     $('#scriptZone').removeClass("w3-hide");
