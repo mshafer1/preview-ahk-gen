@@ -118,10 +118,10 @@ function init() {
     try {
         ga('send', 'event', { eventCategory: 'AHK', eventAction: 'Post', eventLabel: 'Post', eventValue: 1 });
     }
-    catch(_) {
+    catch (_) {
         // pass - user must have blocked ga from loading
     }
-    
+
 
     //disable submit
     $('#btnSubmit').disable(true);
@@ -131,7 +131,7 @@ function init() {
     // build form from GET
     _debug_log("GET: ", GET)
     _debug_log("CONFIG: ", CONFIG)
-   
+
     console.log("Num Keys: ", num_keys)
     for (i = 0; i < num_keys; i++) {
         newRow();
@@ -141,8 +141,8 @@ function init() {
     $('#hotkeyRegion').sortable({
         placeholder: 'placeholder',
         handle: '.draggabble_handle',
-        update: function( event, ui ) {markDirty()},
-      });
+        update: function (event, ui) { markDirty() },
+    });
 }
 
 function setup_row(i, config) {
@@ -384,10 +384,10 @@ function parse_get() {
     CONFIG = _parse_get(GET);
 }
 
-function _check_form(show_error=true, check_required_fields=false) {
+function _check_form(show_error = true, check_required_fields = false) {
     _debug_log("Checking for submit")
     result = true;
-    
+
     // compile list of IDs into hidden input then submit.
     var ids = [];
     $(".js-index").each(function () {
@@ -407,19 +407,19 @@ function _check_form(show_error=true, check_required_fields=false) {
         }
         return true;
     })
-    
+
 
     if (check_required_fields) {
         var required = $('input,textarea,select').filter('[required]:visible');
         var allRequired_have_values = true;
-        required.each(function(){
-            if($(this).val() == ''){
+        required.each(function () {
+            if ($(this).val() == '') {
                 allRequired_have_values = false;
                 return;
             }
         });
 
-        if(!allRequired_have_values){
+        if (!allRequired_have_values) {
             result = false;
             // TODO: show error??
         }
@@ -552,17 +552,17 @@ function markDirty() {
 
     //enable Submit
     $('#btnSubmit').disable(false);
-    $('#btnSubmit').prop('title', "Select to generate new script");    
+    $('#btnSubmit').prop('title', "Select to generate new script");
 }
 
 function eager_compile(changed_id, changed_index, changed_key) {
-    if(!EAGER_COMPILE_ENABLED) {
+    if (!EAGER_COMPILE_ENABLED) {
         return;
     }
 
     var check = _check_form(false, true);
     console.log("Ready for 'compile':", check);
-    if(!check) {
+    if (!check) {
         return;
     }
 
@@ -571,7 +571,7 @@ function eager_compile(changed_id, changed_index, changed_key) {
     var data = new FormData(form);
     var querystring = new URLSearchParams(data).toString();
     console.log("New URL: ", querystring);
-    window.history.pushState({"updatedfield": changed_id, "index": String(changed_index), "changed_key": String(changed_key)}, "AHK Generator", "/?" + querystring);
+    window.history.pushState({ "updatedfield": changed_id, "index": String(changed_index), "changed_key": String(changed_key) }, "AHK Generator", "/?" + querystring);
 }
 
 function _handle_pop_state(event) {
@@ -590,17 +590,17 @@ function _update_fields(state, config) {
             console.warn("Apparently this kase IS possible");
             return;
         }
-        for(var i = 0; i < num_keys; i++) {
+        for (var i = 0; i < num_keys; i++) {
             setup_row(i, CONFIG);
         }
         return
-    } 
-    
+    }
+
     // TODO: handle row deletion and creation
     console.log("Config: ", config);
     var new_value = config[state.index][state.changed_key];
     $(`#${state.updatedfield}`).val(new_value);
-    
+
 }
 
 function destroy(id) {
@@ -613,7 +613,7 @@ function setHotKey(id, backend) {
     $('#optionsShortcut' + id).html(genHotkeyRegion(id))
     console.log("Registering donetyping");
     // TODO: use $(this)??
-    $(`#skey${id}key`).donetyping(function (){ markDirty(); eager_compile($(this).attr('id'), id, `skeyValue`);})
+    $(`#skey${id}key`).donetyping(function () { markDirty(); eager_compile($(this).attr('id'), id, `skeyValue`); })
     if (!backend) {
         markDirty()
     }
@@ -709,7 +709,7 @@ function newRow() {
 function loaded() {
     _debug_log("seeting url")
     script = keygen(CONFIG)
-    $('#downloadLink').attr('href',DOWNLOAD_FILE_HEADER +  encodeURIComponent(script))
+    $('#downloadLink').attr('href', DOWNLOAD_FILE_HEADER + encodeURIComponent(script))
     _setup_download(CONFIG);
 }
 
@@ -738,7 +738,7 @@ function scrollToTop() {
 }
 
 function download() {
-    _cancel_id = setTimeout(function () {alert("Uh, oh. It seems we can't download the file right now - you can still copy and paste it");}, 800)
+    _cancel_id = setTimeout(function () { alert("Uh, oh. It seems we can't download the file right now - you can still copy and paste it"); }, 800)
     console.log("downloading")
     _download_link = document.getElementById('downloadLink');
     if ('msSaveBlob' in window.navigator) {
@@ -746,16 +746,16 @@ function download() {
         var _raw_file = decodeURI(_download_link.href.substring(_header_len));
         var textFileAsBlob = new Blob([_raw_file], {
             type: 'text/plain'
-          });
-        
+        });
+
         window.navigator.msSaveBlob(textFileAsBlob, "hotkey.ahk");
     } else {
         _download_link.click()
     }
-    
-    try {   
+
+    try {
         ga('send', 'event', { eventCategory: 'AHK', eventAction: 'Download', eventLabel: 'Download', eventValue: 1 });
-    } catch(error) {
+    } catch (error) {
         // pass
     }
     // if we got here it succeeded??
