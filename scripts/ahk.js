@@ -63,10 +63,10 @@ function init() {
     try {
         ga('send', 'event', { eventCategory: 'AHK', eventAction: 'Post', eventLabel: 'Post', eventValue: 1 });
     }
-    catch(_) {
+    catch (_) {
         // pass - user must have blocked ga from loading
     }
-    
+
 
     //disable submit
     $('#btnSubmit').disable(true);
@@ -76,7 +76,7 @@ function init() {
     // build form from GET
     _debug_log("GET: ", GET)
     _debug_log("CONFIG: ", CONFIG)
-   
+
     console.log("Num Keys: ", num_keys)
     for (i = 0; i < num_keys; i++) {
         newRow();
@@ -125,8 +125,8 @@ function init() {
     $('#hotkeyRegion').sortable({
         placeholder: 'placeholder',
         handle: '.draggabble_handle',
-        update: function( event, ui ) {markDirty()},
-      });
+        update: function (event, ui) { markDirty() },
+    });
 }
 
 function escapeRegExp(str) { // from https://stackoverflow.com/a/1144788/8100990
@@ -575,7 +575,7 @@ function newRow() {
 function loaded() {
     _debug_log("seeting url")
     script = keygen(CONFIG)
-    $('#downloadLink').attr('href',DOWNLOAD_FILE_HEADER +  encodeURIComponent(script))
+    $('#downloadLink').attr('href', DOWNLOAD_FILE_HEADER + encodeURIComponent(script))
     //setTimeout(download, 500)
     $('#scriptZone').html('<p><pre><code class="autohotkey">' + script + '</code></pre></p>')
     $('#skipToScript').removeClass("w3-hide");
@@ -597,7 +597,7 @@ function scrollToTop() {
 }
 
 function download() {
-    _cancel_id = setTimeout(function () {alert("Uh, oh. It seems we can't download the file right now - you can still copy and paste it");}, 800)
+    _cancel_id = setTimeout(function () { alert("Uh, oh. It seems we can't download the file right now - you can still copy and paste it"); }, 800)
     console.log("downloading")
     _download_link = document.getElementById('downloadLink');
     if ('msSaveBlob' in window.navigator) {
@@ -605,16 +605,16 @@ function download() {
         var _raw_file = decodeURI(_download_link.href.substring(_header_len));
         var textFileAsBlob = new Blob([_raw_file], {
             type: 'text/plain'
-          });
-        
+        });
+
         window.navigator.msSaveBlob(textFileAsBlob, "hotkey.ahk");
     } else {
         _download_link.click()
     }
-    
-    try {   
+
+    try {
         ga('send', 'event', { eventCategory: 'AHK', eventAction: 'Download', eventLabel: 'Download', eventValue: 1 });
-    } catch(error) {
+    } catch (error) {
         // pass
     }
     // if we got here it succeeded??
