@@ -83,8 +83,8 @@ try {
 var GET = {}
 var LOADED = false;
 var DEBUG_LOGGING_ENABLED = false;
-var DOWNLOAD_FILE_HEADER = 'data:text/plain;charset=utf-8,';
 var EAGER_COMPILE_ENABLED = false;
+var DOWNLOAD_FILE_HEADER = 'data:text/plain;charset=utf-8,';
 
 // from https://stackoverflow.com/a/31221374/8100990
 if (!String.prototype.includes) {
