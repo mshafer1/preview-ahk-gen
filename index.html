@@ -10,11 +10,6 @@ layout: basic
     <option value="WheelUp">
     <option value="Escape">
 </datalist>
-<div id="skipToScript" class="w3-row w3-hide w3-padding-bottom">
-    <div class="w3-col s12">
-        <button class="w3-btn" style="float:right;" onclick="scrollToCode();">Skip to code region</button>
-    </div>
-</div>
 <form id="hotkeyForm">
     <input type="hidden" id="indexes" name="indexes" value="" />
     <div class="w3-row w3-dark-grey w3-center">
@@ -25,15 +20,21 @@ layout: basic
             Action
         </div>
     </div>
+    <div id="skipToScript" class="w3-row w3-hide w3-margin">
+        <div class="w3-col s12">
+            <button type="button" class="w3-btn" style="float:left;" onclick="scrollToCode();">Skip to script
+                region</button>
+        </div>
+    </div>
     <div id="hotkeyRegion">
     </div>
-    <div id="newRow" class="w3-row">
+    <div id="newRow" class="w3-row w3-padding-bottom">
         <div class="w3-col s12 w3-center">
             <button type="button" id="btnAdd" class="w3-btn" onclick="newRow(); markDirty()" title="Add row"><i
                     class="fa fa-plus"></i></button>
         </div>
     </div>
-    <div class="w3-row w3-padding-top">
+    <div class="w3-row w3-padding-top w3-margin-top">
         <div class="w3-col s4">
             <button type="submit" class="w3-btn" title="Generate script" id="btnSubmit">Submit!</button>
         </div>
@@ -44,10 +45,10 @@ layout: basic
             </button>
         </div>
         <div class="w3-col s4">
-            <button type="button" id="btnDownload" download="hotkeys.ahk" class="w3-hide w3-btn" style="float:right"
+            <button type="button" download="hotkeys.ahk" class="w3-hide w3-btn js_download_btn" style="float:right"
                 title="Click to download AHK script"
-                onClick="download(); ga('send', 'event', { eventCategory: 'AHK', eventAction: 'Download', eventLabel: 'Download', eventValue: 1 });"
-                disabled>download</button>
+                onClick="download();"
+                disabled>Download</button>
             <a id="downloadLink" href='#' download="hotkeys.ahk" class="w3-hide">download</a>
         </div>
     </div>
@@ -85,5 +86,26 @@ layout: basic
         </div>
     </div>
 </div>
+<div class="w3-row">
+    <div class="w3-col w3-center s4">&nbsp;</div>
+    <div class="w3-col w3-center s4">&nbsp;</div>
+    <div class="w3-col w3-center s4">
+        <button type="button" download="hotkeys.ahk" class="w3-hide w3-btn js_download_btn" style="float:right"
+            title="Click to download AHK script"
+            onClick="download();"
+            disabled>Download</button>
+    </div>
+
+</div>
 <div id="scriptZone" class="w3-border w3-hide w3-margin fitInParent" contenteditable="true">
+</div>
+<div class="w3-row">
+    <div class="w3-col w3-center s4">&nbsp;</div>
+    <div class="w3-col w3-center s4">&nbsp;</div>
+    <div class="w3-col w3-center s4">
+        <button type="button" download="hotkeys.ahk" class="w3-hide w3-btn js_download_btn" style="float:right"
+            title="Click to download AHK script"
+            onClick="download();"
+            disabled>Download</button>
+    </div>
 </div>
