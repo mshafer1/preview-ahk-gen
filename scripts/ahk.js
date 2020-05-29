@@ -104,6 +104,7 @@ function _debug_log() {
 
 function init() {
     window.onpopstate = _handle_pop_state; // lazy do this so that jest doesn't encounter it
+    DEBUG_LOGGING_ENABLED = FEATURE_TOGGLES.DEBUG_LOGGING
     ready()
     load_get()
     parse_get();
@@ -758,7 +759,7 @@ function download() {
     } catch (error) {
         // pass
     }
-    // if we got here it succeeded??
+
     clearTimeout(_cancel_id);
 }
 
