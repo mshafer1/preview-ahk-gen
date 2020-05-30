@@ -1,6 +1,8 @@
 ---
 layout: basic
 ---
+{% assign alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ" | split: "" %}
+{% assign numbers = "0123456789" | split: "" %}
 <datalist id="specialKeys">
     <option value="LButton">
     <option value="RButton">
@@ -9,6 +11,11 @@ layout: basic
     <option value="WheelDown">
     <option value="WheelUp">
     <option value="Escape">
+    {% for letter in alphabet %}
+    <option value="{{ letter }}"></option>
+    <option value="{{ letter | downcase }}"></option>{% endfor %}
+    {% for digit in numbers %}
+    <option value="{{ digit }}"></option>{% endfor %}
 </datalist>
 <form id="hotkeyForm">
     <input type="hidden" id="indexes" name="indexes" value="" />
