@@ -544,21 +544,36 @@ function select(item, id, backend) {
     }
 }
 
-function markDirty() {
+function _mark_helper(dirty = true) {
     //disable download link
-    $('.js_download_btn').disable(true);
-    $('.js_download_btn').prop('title', "Script out of date, submit to update to configuration changes");
+    $('.js_download_btn').disable(dirty);
+    _out_of_date = (dirty) ? "Script out of date, submit to update to configuration changes" : "";
+    _generate = (dirty) ? "" : "Select to generate new script";
+    $('.js_download_btn').prop('title', _out_of_date);
 
     //indicate script is out of date as well
+    if (dirty) {
     $('#scriptZone').addClass('grayout');
-    $('#scriptZone').prop('title', "Script out of date, submit to update to configuration changes");
+    } else {
+        $('#scriptZone').removeClass('grayout');
+    }
+    $('#scriptZone').prop('title', _out_of_date);
 
     //enable Submit
-    $('#btnSubmit').disable(false);
-    $('#btnSubmit').prop('title', "Select to generate new script");
+    $('#btnSubmit').disable(!dirty);
+    $('#btnSubmit').prop('title', _generate);
+}
+
+function markDirty() {
+    _mark_helper(true);
+}
+
+function markClean() {
+    _mark_helper(false);
 }
 
 function eager_compile(changed_id, changed_index, changed_key) {
+    markDirty();
     if (!EAGER_COMPILE_ENABLED) {
         return;
     }
@@ -569,16 +584,22 @@ function eager_compile(changed_id, changed_index, changed_key) {
         return;
     }
 
-    // TODO: how to wait till done done typing?? does the script flash if I don't do this??
     var form = $(`#hotkeyForm`)[0];
     var data = new FormData(form);
     var querystring = new URLSearchParams(data).toString();
     console.log("New URL: ", querystring);
     window.history.pushState({ "updatedfield": changed_id, "index": String(changed_index), "changed_key": String(changed_key) }, "AHK Generator", "/?" + querystring);
+    _debug_log(`/?${querystring}`);
+    var get_arry = _load_get(`/?${querystring}`);
+    _debug_log('get_array', get_arry);
+    var config = _parse_get(get_arry);
+    _setup_download(config);
+    _update_fields(null, config);
+    markClean();
 }
 
 function _handle_pop_state(event) {
-    console.log("location: ", document.location, "\nstate: ", JSON.stringify(event.state));
+    console.log("location: ", document.location, "\nstate: ", event.state);
     var get_arry = _load_get(window.location.search);
     var config = _parse_get(get_arry);
     _setup_download(config);
@@ -586,15 +607,19 @@ function _handle_pop_state(event) {
 }
 
 function _update_fields(state, config) {
+    console.log("State: ", state);
     if (state == null) {
         num_keys = Object.keys(config).length;
         if (num_keys == 0) {
-            // TODO: does this mean last row was was deleted??
-            console.warn("Apparently this kase IS possible");
+            // this means that the last row was deleted
+            $('#hotkeyRegion').empty();
+            // newRow();
+            markDirty();
+            index = 0; // reset index count
             return;
         }
         for (var i = 0; i < num_keys; i++) {
-            setup_row(i, CONFIG);
+            setup_row(i, config);
         }
         return
     }
@@ -614,17 +639,25 @@ function destroy(id) {
 
 function setHotKey(id, backend) {
     $('#optionsShortcut' + id).html(genHotkeyRegion(id))
-    if (EAGER_COMPILE_ENABLED) {
-        console.log("Registering donetyping");
-        // TODO: use $(this)??
-        $(`#skey${id}key`).donetyping(function () { markDirty(); eager_compile($(this).attr('id'), id, `skeyValue`); })
-    }
+    _register_done_typing('#optionsShortcut' + id, id);
     if (!backend) {
         markDirty()
     }
 }
 
+function _register_done_typing(parent_identifier, id) {
+    if (!EAGER_COMPILE_ENABLED) {
+        return
+    }
+    console.log("Registering donetyping");
+    var inputs = $(`${parent_identifier} .js_donetyping`);
+    console.log('Inputs: ', inputs);
+    inputs.donetyping(function () { eager_compile($(this).attr('id'), id, $(this).attr('name').replace(/\d*$/g, '')); });
+}
+
 function genHotkeyRegion(id) {
+    var _handle_change = (EAGER_COMPILE_ENABLED) ? '' : 'oninput="markDirty()"';
+    var _register_change = (EAGER_COMPILE_ENABLED) ? 'js_donetyping' : '';
     return `<div class="w3-row w3-col s6">
                 <div class="w3-col s6">
                     <label><input type="checkbox" id="skey{0}CTRL" name="skey{0}[]" value="CTRL" onchange="markDirty()"/><span class="w3-hide-small w3-hide-medium">Control</span><span class="w3-hide-large">CTRL</span></label>
@@ -641,7 +674,7 @@ function genHotkeyRegion(id) {
             </div>
             <div class="w3-row w3-col s6">
                 <div class="w3-col s12">
-                    <input type="text" placeholder="key" id="skey{0}key" ${ (EAGER_COMPILE_ENABLED) ? '' : 'oninput="markDirty()"'} name="skeyValue{0}" class="keyWidth"  autocomplete="off"  list="specialKeys" title="Set the key to hit (special keys are available for autocomplete" required/>
+                    <input type="text" placeholder="key" id="skey{0}key" ${ _handle_change } name="skeyValue{0}" class="keyWidth ${ _register_change }"  autocomplete="off"  list="specialKeys" title="Set the key to hit (special keys are available for autocomplete" required/>
                 </div>
             </div>`.format(id);
 }
@@ -709,6 +742,7 @@ function newRow() {
     index += 1;
 
     $('#hotkeyRegion').append(newDiv)
+    _register_done_typing('#optionsShortcut' + (index-1), (index-1));
 }
 
 function loaded() {
@@ -726,7 +760,7 @@ function _setup_download(configuration) {
     $('#skipToScript').removeClass("w3-hide");
     $('#scriptZone').removeClass("w3-hide");
     $('.js_download_btn').removeClass("w3-hide");
-    hljs.initHighlighting();
+    hljs.highlightBlock($('#scriptZone')[0]);
 }
 
 function scrollToCode() {
