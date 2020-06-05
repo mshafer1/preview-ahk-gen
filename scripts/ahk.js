@@ -488,9 +488,10 @@ function select(item, id, backend) {
 
     {% for method in site.data.methods %}
     {% unless forloop.first %}else{% endunless %} if (item == '{{ method.code_key }}') {
-        {% assign signature = '_method_signatures/' | append: method.code_key | append: '.html' %}
-        result=`{% include {{ signature }} name=method.code_key %}`
+        result=`{% include _method_signatures/_generic.html method=method %}`
     }{% endfor %}
+
+    $('#function' + id).html(result);
     // if (item == 'ActivateOrOpen') {
     //     $('#function' + id).html('ActivateOrOpen(\
 	// 				"<input type="text" name="Window{0}" id="window{0}" placeholder="Window" class="keyWidth"  oninput="markDirty()" required/>", <span class="w3-hide-large"><br/></span>\
