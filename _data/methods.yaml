@@ -13,7 +13,7 @@
   description: Sends input (types for you)
   preview_signature: Send("input")
   args:
-  - name: Text
+  - name: Input
     description: Text to send
 - code_key: Replace
   description: >
