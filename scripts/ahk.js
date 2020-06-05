@@ -1,3 +1,5 @@
+---
+---
 GET_KEYS = {
     enable_debug_logging: 'DEBUG_LOG',
     enable_eager_compile: 'EAGER_COMPILE',
@@ -482,63 +484,75 @@ function select(item, id, backend) {
     $('.w3-dropdown-content').removeClass('w3-show');
     $(".fa-caret-right").removeClass("fa-rotate-90");
 
-    if (item == 'ActivateOrOpen') {
-        $('#function' + id).html('ActivateOrOpen(\
-					"<input type="text" name="Window{0}" id="window{0}" placeholder="Window" class="keyWidth"  oninput="markDirty()" required/>", <span class="w3-hide-large"><br/></span>\
-					"<input id="program{0}" type="text" name="Program{0}" placeholder="Program"  class="keyWidth"  oninput="markDirty()" required/>")\
-					<input type="hidden" value="ActivateOrOpen" name="option{0}" id="option{0}"/>'.format(id))
+    result = '';
 
-        $("#program" + id).click(function (event) {
-            event.stopPropagation();
-        });
-        $("#window" + id).click(function (event) {
-            event.stopPropagation();
-        });
-    } else if (item == 'Send') {
-        $('#function' + id).html('Send( "<input name="input{0}"  id="input{0}" type="text" placeholder="input"  oninput="markDirty()" required/>")\
-					<input type="hidden" value="Send" name="option{0}" id="option{0}"/>'.format(id))
-
-        $("#input" + id).click(function (event) {
-            event.stopPropagation();
-        });
-    } else if (item == 'Replace') {
-        $('#function' + id).html('Replace( "<input type="text" name="input{0}" id="input{0}" placeholder="input"  oninput="markDirty()" required/>")\
-					<input type="hidden" value="Replace" name="option{0}" id="option{0}"/>'.format(id))
-        $("#input" + id).click(function (event) {
-            event.stopPropagation();
-        });
-    } else if (item == 'ActivateOrOpenChrome') {
-        $('#function' + id).html('ActivateOrOpenChrome(<span class="w3-hide-large w3-hide-medium"><br/></span>\
-					"<input type="text" name="Window{0}" id="window{0}" placeholder="tab name"  class="keyWidth"  oninput="markDirty()" required/>", <span class="w3-hide-large"><br/></span>\
-					"<input id="program{0}" type="text" name="Program{0}" placeholder="URL"  class="keyWidth"  oninput="markDirty()" required/>")\
-					<input type="hidden" value="ActivateOrOpenChrome" name="option{0}" id="option{0}"/>'.format(id))
-
-        $("#program" + id).click(function (event) {
-            event.stopPropagation();
-        });
-        $("#window" + id).click(function (event) {
-            event.stopPropagation();
-        });
-    } else if (item == 'Custom') {
-        $('#function' + id).html('Custom: <textarea name="Code{0}"  id="code{0}" placeholder="code" class="codeArea"  oninput="markDirty()" required/>)\
-					<input type="hidden" value="Custom" name="option{0}" id="option{0}"/>'.format(id))
-
-        $("#code" + id).click(function (event) {
-            event.stopPropagation();
-        });
-    } else if (item == 'SendUnicodeChar') {
-        $('#function' + id).html('SendUnicodeChar(<input name="input{0}"  id="input{0}" type="text" placeholder="0x000" class="keyWidth"  oninput="markDirty()" required/>)\
-					<input type="hidden" value="SendUnicodeChar" name="option{0}" id="option{0}"/>'.format(id))
-
-        $("#input" + id).click(function (event) {
-            event.stopPropagation();
-        });
-    } else if (item == 'OpenConfig') {
-        console.log("open config");
-        $('#function' + id).html('OpenConfig() <input type="hidden" value="OpenConfig" name="option{0}" id="option{0}"/>'.format(id))
+    if(FEATURE_TOGGLES.SINGLE_SOURCE) {
+        {% for method in site.data.methods %}
+        {% unless forloop.first %}else {% endunless %}if (item == '{{ method.code_key }}') {
+            result=`{% include _method_signatures/_generic.html method=method %}`
+        }{% endfor %}
+    
+        $('#function' + id).html(result);
     }
+    else {
+        if (item == 'ActivateOrOpen') {
+            $('#function' + id).html('ActivateOrOpen(\
+                        "<input type="text" name="Window{0}" id="window{0}" placeholder="Window" class="keyWidth"  oninput="markDirty()" required/>", <span class="w3-hide-large"><br/></span>\
+                        "<input id="program{0}" type="text" name="Program{0}" placeholder="Program"  class="keyWidth"  oninput="markDirty()" required/>")\
+                        <input type="hidden" value="ActivateOrOpen" name="option{0}" id="option{0}"/>'.format(id))
 
-    _register_done_typing(`#function${id}`, id)
+            $("#program" + id).click(function (event) {
+                event.stopPropagation();
+            });
+            $("#window" + id).click(function (event) {
+                event.stopPropagation();
+            });
+        } else if (item == 'Send') {
+            $('#function' + id).html('Send( "<input name="input{0}"  id="input{0}" type="text" placeholder="input"  oninput="markDirty()" required/>")\
+                        <input type="hidden" value="Send" name="option{0}" id="option{0}"/>'.format(id))
+
+            $("#input" + id).click(function (event) {
+                event.stopPropagation();
+            });
+        } else if (item == 'Replace') {
+            $('#function' + id).html('Replace( "<input type="text" name="input{0}" id="input{0}" placeholder="input"  oninput="markDirty()" required/>")\
+                        <input type="hidden" value="Replace" name="option{0}" id="option{0}"/>'.format(id))
+            $("#input" + id).click(function (event) {
+                event.stopPropagation();
+            });
+        } else if (item == 'ActivateOrOpenChrome') {
+            $('#function' + id).html('ActivateOrOpenChrome(<span class="w3-hide-large w3-hide-medium"><br/></span>\
+                        "<input type="text" name="Window{0}" id="window{0}" placeholder="tab name"  class="keyWidth"  oninput="markDirty()" required/>", <span class="w3-hide-large"><br/></span>\
+                        "<input id="program{0}" type="text" name="Program{0}" placeholder="URL"  class="keyWidth"  oninput="markDirty()" required/>")\
+                        <input type="hidden" value="ActivateOrOpenChrome" name="option{0}" id="option{0}"/>'.format(id))
+
+            $("#program" + id).click(function (event) {
+                event.stopPropagation();
+            });
+            $("#window" + id).click(function (event) {
+                event.stopPropagation();
+            });
+        } else if (item == 'Custom') {
+            $('#function' + id).html('Custom: <textarea name="Code{0}"  id="code{0}" placeholder="code" class="codeArea"  oninput="markDirty()" required/>)\
+                        <input type="hidden" value="Custom" name="option{0}" id="option{0}"/>'.format(id))
+
+            $("#code" + id).click(function (event) {
+                event.stopPropagation();
+            });
+        } else if (item == 'SendUnicodeChar') {
+            $('#function' + id).html('SendUnicodeChar(<input name="input{0}"  id="input{0}" type="text" placeholder="0x000" class="keyWidth"  oninput="markDirty()" required/>)\
+                        <input type="hidden" value="SendUnicodeChar" name="option{0}" id="option{0}"/>'.format(id))
+
+            $("#input" + id).click(function (event) {
+                event.stopPropagation();
+            });
+        } else if (item == 'OpenConfig') {
+            console.log("open config");
+            $('#function' + id).html('OpenConfig() <input type="hidden" value="OpenConfig" name="option{0}" id="option{0}"/>'.format(id))
+        }
+
+        _register_done_typing(`#function${id}`, id)
+    }
 
     if (!backend) {
         markDirty()
@@ -736,19 +750,9 @@ function newRow() {
                         <div class="w3-col l11 m8 s10 w3-dropdown-click defaultCursor">
                             <div class="w3-btn w3-centered fitInParent" onclick="dropdown(\'${index}\')"><span id="function${index}" >(Select a function)</span><i id="arrow${index}" class="fa fa-caret-right" aria-hidden="true"></i></div>
                             <div id="key${index}" class="w3-dropdown-content w3-border onTop">
-                                    <button type="button" class="w3-btn w3-margin" onclick="select(\'ActivateOrOpen\', \'${index}\')" title="Brings a program whose title matches the Window (defaulting to \'contains\' mode) to the front or runs the Program\ni.e. ActivateOrOpen(&quot;- Chrome&quot;, &quot;Chrome.exe&quot;) will bring Chrome to the front or open it">ActivateOrOpen("Window", "Program")</button>
-                                    <br/>
-                                    <button type="button" class="w3-btn w3-margin" onclick="select(\'Send\', \'${index}\')" title="Sends input (types for you)">Send("input")</button>
-                                    <br/>
-                                    <button type="button" class="w3-btn w3-margin" onclick="select(\'Replace\', \'${index}\')" title="Removes what was just typed (for hotstring, but treated as Send for hotkey) and sends the value\ni.e. Replace(&quot;by the way&quot;) can be used with a hotstring of btw to cause it to be expanded when typed">Replace("input")</button>
-                                    <br/>
-                                    <button type="button" class="w3-btn w3-margin" onclick="select(\'SendUnicodeChar\', \'${index}\')" title="Sends the unicode character given the UTF-16 value\ni.e. SendUnicodeChar(&quot;0x263A&quot;) will insert a smiley face">SendUnicodeChar("charCode")</button>
-                                    <br/>
-                                    <button type="button" class="w3-btn w3-margin" onclick="select(\'ActivateOrOpenChrome\', \'${index}\')" title="Searches through Chrome windows/tabs for tab with provided name - opens chrome.exe &quot;url&quot; if not found\ni.e. ActivateOrOpenChrome(&quot;Pandora&quot;, &quot;www.pandora.com&quot;) will search through chrome tabs for Pandora and open pandora.com if not found">ActivateOrOpenChrome("tab name", "url")</button>
-                                    <br/>
-                                    <button type="button" class="w3-btn w3-margin" onclick="select(\'OpenConfig\', \'${index}\')" title="Open this script's config page in default browser">OpenConfig()</button>
-                                    <br/>
-                                    <button type="button" class="w3-btn w3-margin" onclick="select(\'Custom\', \'${index}\')" title="A sandbox for creating your own usage of the hotkey/hotstring">Custom("code")</button>
+                                    {% for action in site.data.methods %}
+                                    <button type="button" class="w3-btn w3-margin" onclick="select(\'{{ action.code_key }}\', \'${index}\')" title='{{ action.description | strip }}'>{{ action.preview_signature }}</button>
+                                    <br/>{% endfor %}
                                 </div>
                         </div>
                         <div class="w3-col l1 m4 s2">
