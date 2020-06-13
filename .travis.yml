@@ -17,6 +17,7 @@ jobs:
     after_success:
     - npm run coveralls
 
+
     - language: ruby
     rvm:
       - 2.1
