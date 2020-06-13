@@ -13,14 +13,18 @@ jobs:
     - npm update
     install:
     - npm install
+    - bundle exec jekyll build
     script:
+    - bundle exec htmlproofer ./_site --only-4xx --check-favicon --check-html
     - npm test
     after_success:
     - npm run coveralls
 
-  - language: ruby
-    rvm: 2.1
-    install:
-      - bundle exec jekyll build
-    script:
-      - bundle exec htmlproofer ./_site --only-4xx --check-favicon --check-html
+  # - language: python
+  #   python:
+  #   - 3.6
+  #   before_install:
+  #   - npm update
+  #   install:
+  #   - npm install
+  #   - bundle install
