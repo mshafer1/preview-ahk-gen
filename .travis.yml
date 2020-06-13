@@ -1,9 +1,10 @@
+---
 sudo: false
 dist: xenial
 
 jobs:
   include:
-    - language: node_js
+  - language: node_js
     node_js: 10
     cache:
       directories:
@@ -17,10 +18,8 @@ jobs:
     after_success:
     - npm run coveralls
 
-
-    - language: ruby
-    rvm:
-      - 2.1
+  - language: ruby
+    rvm: 2.1
     install:
       - bundle exec jekyll build
     script:
