@@ -1,8 +1,10 @@
 sudo: false
 addons:
-  apt:
-    packages:
-      - xvfb
+  chrome:
+    stable
+  # apt:
+  #   packages:
+  #     - xvfb
 
 language: python
 python:
@@ -18,19 +20,29 @@ cache:
   - node_modules
 
 before_install:
-- export DISPLAY=':99.0'
-- Xvfb :99 -screen 0 1024x768x24 > /dev/null 2>&1 &
+# - export DISPLAY=':99.0'
+# - Xvfb :99 -screen 0 1024x768x24 > /dev/null 2>&1 &
 - nvm install node 11.10.0
 - npm update
 
 install:
 - bundler install
 - npm install
-- bundle exec jekyll build -d _site
+- pip install -r test_requirements.txt
 
-script:
-- bundle exec htmlproofer ./_site --only-4xx --check-favicon --check-html
-- npm test
+jobs:
+  include:
+    - stage: build
+      script: bundle exec jekyll build -d _site
+    - stage: htmlproofer
+      script: bundle exec htmlproofer ./_site --only-4xx --check-favicon --check-html
+    - stage: js tests
+      script: npm test
+    - stage: browser tests
+      script: 
+      - bundle exec jekyll serve &
+      - "/Applications/Google\\ Chrome.app/Contents/MacOS/Google\\ Chrome --headless --disable-gpu --remote-debugging-port=9222 http://localhost:5000 &"
+      - python -m pytest .
 
 after_success:
 - npm run coveralls
