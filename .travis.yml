@@ -30,19 +30,13 @@ install:
 - npm install
 - pip install -r test_requirements.txt
 
-jobs:
-  include:
-    - stage: build
-      script: bundle exec jekyll build -d _site
-    - stage: htmlproofer
-      script: bundle exec htmlproofer ./_site --only-4xx --check-favicon --check-html
-    - stage: js tests
-      script: npm test
-    - stage: browser tests
-      script: 
-      - bundle exec jekyll serve &
-      - "/Applications/Google\\ Chrome.app/Contents/MacOS/Google\\ Chrome --headless --disable-gpu --remote-debugging-port=9222 http://localhost:5000 &"
-      - python -m pytest .
+script:
+- bundle exec jekyll build -d _site
+- bundle exec htmlproofer ./_site --only-4xx --check-favicon --check-html
+- npm test
+- bundle exec jekyll serve &
+- "/Applications/Google\\ Chrome.app/Contents/MacOS/Google\\ Chrome --headless --disable-gpu --remote-debugging-port=9222 http://localhost:5000 &"
+- python -m pytest .
 
 after_success:
 - npm run coveralls
