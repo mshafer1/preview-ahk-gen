@@ -2,14 +2,25 @@ sudo: false
 language: node_js
 node_js:
 - '10'
+# branches:
+#   only:
+#   - master
+#   - gh-pages
+#   - _get_build_working
 cache:
+  bundler: true
   directories:
   - node_modules
+
 before_install:
 - npm update
+
 install:
+- bundler add jekyll
 - npm install
+
 script:
+- bundle exec jekyll build -d _site
 - npm test
 after_success:
 - npm run coveralls
