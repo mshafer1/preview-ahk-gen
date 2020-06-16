@@ -42,7 +42,7 @@ script:
 - npm test
 - bundle exec jekyll serve &
 - # start your web application and listen on `localhost` - from https://docs.travis-ci.com/user/gui-and-headless-browsers/#using-the-chrome-addon-in-the-headless-mode
-- google-chrome-stable --headless --disable-gpu --remote-debugging-port=9222 http://localhost:5000 &
+# - google-chrome-stable --headless --disable-gpu --remote-debugging-port=9222 http://localhost:5000 &
 - python -m pytest .
 
 after_success:

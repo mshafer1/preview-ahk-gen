@@ -1,6 +1,9 @@
 from selenium import webdriver
-
+from selenium.webdriver.chrome.options import Options
 
 def test_travis_runs_tests():
-    browser = webdriver.Chrome()
+    o = Options()
+    o.add_argument('--headless')
+    # o.add_argument('')
+    browser = webdriver.Chrome('/root/bin/chromedriver', options=o)
     browser.get('http://localhost:5000/')
