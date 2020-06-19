@@ -32,12 +32,12 @@ def pytest_generate_tests(metafunc):
         raise Exception("Must provide --driver_path")
 
     if "driver_path" in metafunc.fixturenames:
-        metafunc.parametrize("driver_path", [metafunc.config.getoption("driver_path")])
+        metafunc.parametrize("driver_path", [metafunc.config.getoption("driver_path")], scope="session")
 
     if "use_headless" in metafunc.fixturenames:
-        metafunc.parametrize("use_headless", [use_headless])
+        metafunc.parametrize("use_headless", [use_headless], scope="session")
 
-@pytest.fixture()
+@pytest.fixture(scope="session",)
 def browser(driver_path, use_headless):
     if not browser.result:
         opts = Options()
@@ -48,6 +48,8 @@ def browser(driver_path, use_headless):
 
         browser.result = webdriver.Chrome(driver_path, options=opts)
     yield browser.result
+
+    browser.result.close()
 
 
 browser.result = None
