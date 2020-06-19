@@ -40,6 +40,7 @@ before_script:
 - export CHROME_BIN=chromium-driver
 
 script:
+- echo path=$PATH
 - bundle exec jekyll build -d _site
 - bundle exec htmlproofer ./_site --only-4xx --check-favicon --check-html
 - npm test
