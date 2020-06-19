@@ -33,13 +33,13 @@ install:
 
 # from https://travis-ci.community/t/how-to-setup-chromedriver-74-with-chrome-74-for-travis/2678/7
 before_script:
+- echo $PATH
 - LATEST_CHROMEDRIVER_VERSION=`curl -s "https://chromedriver.storage.googleapis.com/LATEST_RELEASE"`
 - curl "https://chromedriver.storage.googleapis.com/${LATEST_CHROMEDRIVER_VERSION}/chromedriver_linux64.zip" -O
 - unzip chromedriver_linux64.zip -d ~/bin
+- export CHROME_BIN=chromium-driver
 
 script:
-# where is this getting stored??
-- bundle exec which jekyll
 - bundle exec jekyll build -d _site
 - bundle exec htmlproofer ./_site --only-4xx --check-favicon --check-html
 - npm test
