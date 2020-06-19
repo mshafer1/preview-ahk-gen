@@ -37,6 +37,8 @@ before_script:
 - unzip chromedriver_linux64.zip -d ~/bin
 
 script:
+# where is this getting stored??
+- bundle exec which jekyll
 - bundle exec jekyll build -d _site
 - bundle exec htmlproofer ./_site --only-4xx --check-favicon --check-html
 - npm test
