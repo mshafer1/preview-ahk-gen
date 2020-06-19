@@ -18,7 +18,7 @@ def pytest_addoption(parser):
         action="store_true",
         help="Use browser in headless mode",
         required=False,
-        default=False
+        default=False,
     )
 
 
@@ -32,10 +32,13 @@ def pytest_generate_tests(metafunc):
         raise Exception("Must provide --driver_path")
 
     if "driver_path" in metafunc.fixturenames:
-        metafunc.parametrize("driver_path", [metafunc.config.getoption("driver_path")], scope="session")
+        metafunc.parametrize(
+            "driver_path", [metafunc.config.getoption("driver_path")], scope="session"
+        )
 
     if "use_headless" in metafunc.fixturenames:
         metafunc.parametrize("use_headless", [use_headless], scope="session")
+
 
 @pytest.fixture(scope="session",)
 def browser(driver_path, use_headless):
@@ -49,7 +52,11 @@ def browser(driver_path, use_headless):
         browser.result = webdriver.Chrome(driver_path, options=opts)
     yield browser.result
 
-    browser.result.close()
+    try:
+        browser.result.close()
+    except:
+        pass
+    browser.result = None
 
 
 browser.result = None
@@ -72,6 +79,7 @@ def parser():
         return BeautifulSoup(html, "html.parser")
 
     yield _get_parser
+
 
 @pytest.fixture()
 def base_url():
