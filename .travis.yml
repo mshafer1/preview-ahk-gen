@@ -18,6 +18,7 @@ cache:
   bundler: true
   directories:
   - node_modules
+  - /home/travis/.rvm/gems
 
 before_install:
 # - export DISPLAY=':99.0'
