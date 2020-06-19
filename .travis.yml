@@ -37,7 +37,6 @@ before_script:
 - curl "https://chromedriver.storage.googleapis.com/${LATEST_CHROMEDRIVER_VERSION}/chromedriver_linux64.zip" -O
 - unzip chromedriver_linux64.zip -d ~/bin
 - export PATH=$PATH:~/bin
-- export CHROME_BIN=chromium-driver
 
 script:
 - echo path=$PATH
@@ -48,7 +47,7 @@ script:
 - sleep 5s
 - # start your web application and listen on `localhost` - from https://docs.travis-ci.com/user/gui-and-headless-browsers/#using-the-chrome-addon-in-the-headless-mode
 # - google-chrome-stable --headless --disable-gpu --remote-debugging-port=9222 http://localhost:5000 &
-- python -m pytest . --driver-path ~/bin/chrome-driver
+- python -m pytest . --driver-path ~/bin/chromedriver
 
 after_success:
 - npm run coveralls
