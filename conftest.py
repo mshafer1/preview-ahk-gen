@@ -30,8 +30,8 @@ def pytest_generate_tests(metafunc):
 def browser(driver_path):
     if not browser.result:
         opts = Options()
-        # opts.add_argument("--headless")
-        # opts.add_argument("--disable-gpu")  # Last I checked this was necessary.
+        opts.add_argument("--headless")
+        opts.add_argument("--disable-gpu")  # Last I checked this was necessary.
 
         browser.result = webdriver.Chrome(driver_path, options=opts)
     yield browser.result
