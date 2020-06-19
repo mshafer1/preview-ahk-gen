@@ -12,12 +12,21 @@ def pytest_addoption(parser):
         help="Path to the chrome webdriver to use",
         required=True,
     )
+    parser.addoption(
+        "--use-headless",
+        dest="use_headless",
+        action="store_true",
+        help="Use browser in headless mode",
+        required=False,
+        default=False
+    )
 
 
 def pytest_generate_tests(metafunc):
     # This is called for every test. Only get/set command line arguments
     # if the argument is specified in the list of test "fixturenames".
     driver_path = metafunc.config.getoption("driver_path", None)
+    use_headless = metafunc.config.option.use_headless
 
     if driver_path is None:
         raise Exception("Must provide --driver_path")
@@ -25,13 +34,17 @@ def pytest_generate_tests(metafunc):
     if "driver_path" in metafunc.fixturenames:
         metafunc.parametrize("driver_path", [metafunc.config.getoption("driver_path")])
 
+    if "use_headless" in metafunc.fixturenames:
+        metafunc.parametrize("use_headless", [use_headless])
 
 @pytest.fixture()
-def browser(driver_path):
+def browser(driver_path, use_headless):
     if not browser.result:
         opts = Options()
-        opts.add_argument("--headless")
-        opts.add_argument("--disable-gpu")  # Last I checked this was necessary.
+
+        if use_headless:
+            opts.add_argument("--headless")
+            opts.add_argument("--disable-gpu")
 
         browser.result = webdriver.Chrome(driver_path, options=opts)
     yield browser.result

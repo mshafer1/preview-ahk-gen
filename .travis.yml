@@ -2,13 +2,10 @@ sudo: false
 addons:
   chrome:
     stable
-  # apt:
-  #   packages:
-  #     - xvfb
 
 language: python
 python:
-  - "3.6"      # current default Python on Travis CI
+  - "3.6"
 # branches:
 #   only:
 #   - master
@@ -21,8 +18,6 @@ cache:
   - /home/travis/.rvm/gems
 
 before_install:
-# - export DISPLAY=':99.0'
-# - Xvfb :99 -screen 0 1024x768x24 > /dev/null 2>&1 &
 - nvm install node 11.10.0
 - npm update
 
@@ -45,9 +40,7 @@ script:
 - npm test
 - bundle exec jekyll serve --no-watch &
 - sleep 5s
-- # start your web application and listen on `localhost` - from https://docs.travis-ci.com/user/gui-and-headless-browsers/#using-the-chrome-addon-in-the-headless-mode
-# - google-chrome-stable --headless --disable-gpu --remote-debugging-port=9222 http://localhost:5000 &
-- python -m pytest . --driver-path ~/bin/chromedriver
+- python -m pytest . --driver-path ~/bin/chromedriver --use-headless
 
 after_success:
 - npm run coveralls
