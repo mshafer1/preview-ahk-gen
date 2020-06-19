@@ -1,1 +1,1 @@
-exclude: [node_modules, .pytest_cache, __tests__]
+exclude: [node_modules, .pytest_cache, __tests__, conftest.py]
