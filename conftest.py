@@ -64,13 +64,8 @@ browser.result = None
 
 @pytest.fixture()
 def root_page(browser, base_url):
-    if not root_page.result:
-        browser.get(base_url)
-        root_page.result = browser
-    yield root_page.result
-
-
-root_page.result = None
+    browser.get(base_url)
+    yield browser
 
 
 @pytest.fixture()
