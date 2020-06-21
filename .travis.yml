@@ -24,7 +24,7 @@ before_install:
 install:
 - bundler install
 - npm install
-- pip install -r test_requirements.txt
+- pip install -r requirements_test.txt
 
 # from https://travis-ci.community/t/how-to-setup-chromedriver-74-with-chrome-74-for-travis/2678/7
 before_script:
