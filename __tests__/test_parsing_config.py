@@ -1,4 +1,5 @@
 import pytest
+from selenium.webdriver.common.by import By
 
 basic_url = "/?length=1&comment0=test+comment&func0=KEY&skey0%5B%5D=CTRL&skey0%5B%5D=ALT&skeyValue0=i&Window0=ahk_exe+chrome.exe&Program0=chrome.exe&option0=ActivateOrOpen"
 basic_hotstring_url = "/?indexes=0&comment0=&func0=STRING&skeyValue0=btw&input0=by+the+way&option0=Replace"
@@ -39,15 +40,8 @@ def test__url_and_expected_trigger_types__load_page__assert_has_expected_trigger
     browser.get(base_url + url)
     page = browser.page_source
 
-    parsed = parser(page)
-    row_trigger_types = parsed.find_all("input", {"type": "radio"})
-    row_trigger_types = [
-        row_trigger_type for row_trigger_type in row_trigger_types
-        if row_trigger_type["name"].startswith("func")
-    ]
-    row_trigger_types = [
-        row_trigger_type for row_trigger_type in row_trigger_types
-        if row_trigger_type.has_attr('checked')
-    ]
 
-    assert [trigger['value'] for trigger in row_trigger_types] == expected_trigger_types
+    checked_selectors = browser.find_elements(By.CSS_SELECTOR, "input[type='radio']:checked")
+    values = [selector.get_attribute('value') for selector in checked_selectors]
+
+    assert values == expected_trigger_types

@@ -151,8 +151,6 @@ function init() {
 
 function setup_row(i, config) {
     $('#func' + i + config[i]['func']).attr("checked", true);
-    other_func =  config[i]['func'] == 'KEY'?'STRING':'KEY'
-    $('#func' + i + other_func).removeAttr('checked');
     _debug_log(config[i]['func']);
     if ('comment' in config[i]) {
         $('#comment' + i).val(config[i]['comment']);
