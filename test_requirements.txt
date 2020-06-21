@@ -1,3 +1,4 @@
 pytest
+pytest-subtests
 selenium
 beautifulsoup4
