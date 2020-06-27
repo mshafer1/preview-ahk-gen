@@ -1,5 +1,6 @@
 {
     "0": {
-        "comment": "btw = by the way"
+        "comment": "btw = by the way",
+        "trigger_keys": "btw"
     }
 }

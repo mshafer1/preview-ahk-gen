@@ -66,11 +66,6 @@ def loaded_data(browser, parser):
 
     text_inputs = parsed.find_all("input", {"type": "text"})
 
-    # text_inputs = browser.find_elements(By.CSS_SELECTOR,)
-    # comment_inputs = [
-    #     i for i in text_inputs if i.get_attribute("name").startswith("comment")
-    # ]
-
     comment_inputs = _get_elements_and_desired_value_through_browser(
         By.CSS_SELECTOR,
         "input[type='text']",
@@ -80,9 +75,22 @@ def loaded_data(browser, parser):
         browser,
     )
 
-    # comment_inputs = [i for i in text_inputs if i.get("name", "").startswith("comment")]
     for name, comment in comment_inputs.items():
         id_value = name[len("comment") :]
         data[id_value]["comment"] = comment
+
+    
+    hotstring_inputs = _get_elements_and_desired_value_through_browser(
+        By.CSS_SELECTOR,
+        "input[type='text']",
+        lambda v: v.startswith("skeyValue"),
+        "name",
+        "value",
+        browser,
+    )
+
+    for name, trigger_keys in hotstring_inputs.items():
+        id_value = name[len("skeyValue") :]
+        data[id_value]["trigger_keys"] = trigger_keys
 
     return dict(data)
