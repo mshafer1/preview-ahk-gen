@@ -1,6 +1,10 @@
 {
     "0": {
         "comment": "",
-        "trigger_keys": "i"
+        "trigger_keys": "i",
+        "modifier_keys": [
+            "CTRL",
+            "ALT"
+        ]
     }
 }

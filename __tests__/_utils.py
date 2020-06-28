@@ -44,9 +44,18 @@ def _get_elements_and_desired_value_through_browser(
 ):
     elements = browser.find_elements(path_type, path)
     desired_elements = [i for i in elements if filter(i.get_attribute(filter_attr))]
-    return {
-        i.get_attribute("name"): i.get_attribute(desired_attr) for i in desired_elements
-    }
+    result = {}
+    for element in desired_elements:
+        name = element.get_attribute("name")
+        if name in result:
+            if not isinstance(result[name], list):
+                result[name] = [result[name]]
+            
+            result[name].append(element.get_attribute(desired_attr))
+        else:
+            result[name] = element.get_attribute(desired_attr)
+
+    return result
 
 
 def loaded_data(browser, parser):
@@ -79,7 +88,6 @@ def loaded_data(browser, parser):
         id_value = name[len("comment") :]
         data[id_value]["comment"] = comment
 
-    
     hotstring_inputs = _get_elements_and_desired_value_through_browser(
         By.CSS_SELECTOR,
         "input[type='text']",
@@ -92,5 +100,18 @@ def loaded_data(browser, parser):
     for name, trigger_keys in hotstring_inputs.items():
         id_value = name[len("skeyValue") :]
         data[id_value]["trigger_keys"] = trigger_keys
+
+    modifier_keys = _get_elements_and_desired_value_through_browser(
+        By.CSS_SELECTOR,
+        "input[type='checkbox']:checked",
+        lambda name: name.startswith("skey") and name.endswith("[]"),
+        "name",
+        "value",
+        browser,
+    )
+
+    for name, modifier_key in modifier_keys.items():
+        id_value = name[len("skey") : -2]
+        data[id_value]["modifier_keys"] = modifier_key
 
     return dict(data)
