@@ -1,3 +1,4 @@
+import re
 from collections import defaultdict
 from enum import Enum
 
@@ -39,21 +40,30 @@ class AssertionObject:
                 assert values == self._hotkey_ids
 
 
-def _get_elements_and_desired_value_through_browser(
-    path_type, path, filter, filter_attr, desired_attr, browser
+def _get_elements_through_browser(
+    path_type, path, filter, filter_attr, browser,
 ):
     elements = browser.find_elements(path_type, path)
     desired_elements = [i for i in elements if filter(i.get_attribute(filter_attr))]
+    return desired_elements
+
+
+def _get_elements_and_desired_value_through_browser(
+    path_type, path, filter, filter_attr, desired_attr, browser, sort_attribute="name"
+):
+    desired_elements = _get_elements_through_browser(
+        path_type, path, filter, filter_attr, browser
+    )
     result = {}
     for element in desired_elements:
-        name = element.get_attribute("name")
-        if name in result:
-            if not isinstance(result[name], list):
-                result[name] = [result[name]]
-            
-            result[name].append(element.get_attribute(desired_attr))
+        sort_key = element.get_attribute(sort_attribute)
+        if sort_key in result:
+            if not isinstance(result[sort_key], list):
+                result[sort_key] = [result[sort_key]]
+
+            result[sort_key].append(element.get_attribute(desired_attr))
         else:
-            result[name] = element.get_attribute(desired_attr)
+            result[sort_key] = element.get_attribute(desired_attr)
 
     return result
 
@@ -124,5 +134,34 @@ def loaded_data(browser, parser):
     for name, modifier_key in modifier_keys.items():
         id_value = name[len("skey") : -2]
         data[id_value]["modifier_keys"] = modifier_key
+
+    selected_functions = _get_elements_through_browser(
+        By.CSS_SELECTOR,
+        path="span",
+        filter=lambda id: id.startswith("function"),
+        filter_attr="id",
+        browser=browser,
+    )
+
+    _arg_regex = r'\"\<input .+?name=\"(.+?)\".+?\>\"'
+
+    for function in selected_functions:
+        html_id = function.get_attribute('id')
+        id_value = html_id[len("function") :]
+
+        function_signature = function.get_attribute('innerHTML')
+        function_signature = re.sub(_arg_regex, r'"\{\1\}"', function_signature).replace('\t', '')
+        function_signature = re.sub(r"\<input type=\"hidden\".+?\/?\>", "", function_signature)
+
+        args = _get_elements_and_desired_value_through_browser(By.CSS_SELECTOR, r'input[type="text"]', filter=lambda _: True, filter_attr='name', desired_attr='value', browser=function)
+        
+        # arg_names = [arg.group(1) for arg in re.findall(_input_regex, function)]
+        # arg_values = [arg.group(2) for arg in re.findall(_input_regex, function)]
+
+        data[id_value]["action"] = {
+            "function": function_signature,
+            "args": args
+        }
+        # data[id_value][""]
 
     return dict(data)

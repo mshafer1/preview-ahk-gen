@@ -6,6 +6,13 @@
         "modifier_keys": [
             "CTRL",
             "ALT"
-        ]
+        ],
+        "action": {
+            "function": "ActivateOrOpen(\"\\{Window0\\}\", <span class=\"w3-hide-large\"><br></span>\"\\{Program0\\}\")",
+            "args": {
+                "Window0": "ahk_exe chrome.exe",
+                "Program0": "chrome.exe"
+            }
+        }
     }
 }

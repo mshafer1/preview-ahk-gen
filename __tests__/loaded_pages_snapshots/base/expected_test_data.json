@@ -2,6 +2,10 @@
     "0": {
         "trigger_type": "KEY",
         "comment": "",
-        "trigger_keys": ""
+        "trigger_keys": "",
+        "action": {
+            "function": "(Select a function)",
+            "args": {}
+        }
     }
 }
