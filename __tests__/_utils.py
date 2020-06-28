@@ -151,7 +151,7 @@ def loaded_data(browser, parser):
 
         function_signature = function.get_attribute('innerHTML')
         function_signature = re.sub(_arg_regex, r'"\{\1\}"', function_signature).replace('\t', '')
-        function_signature = re.sub(r"\<input type=\"hidden\".+?\/?\>", "", function_signature)
+        function_signature = re.sub(r"\<input type=\"hidden\".+?\/?\>", "", function_signature).strip()
 
         args = _get_elements_and_desired_value_through_browser(By.CSS_SELECTOR, r'input[type="text"]', filter=lambda _: True, filter_attr='name', desired_attr='value', browser=function)
         
