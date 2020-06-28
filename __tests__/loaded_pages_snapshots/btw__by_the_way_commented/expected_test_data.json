@@ -1,5 +1,6 @@
 {
     "0": {
+        "trigger_type": "STRING",
         "comment": "btw = by the way",
         "trigger_keys": "btw"
     }

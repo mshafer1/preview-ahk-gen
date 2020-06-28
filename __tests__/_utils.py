@@ -73,7 +73,18 @@ def loaded_data(browser, parser):
     # else:
     #     data["hotkey_ids"] = hotkey_ids
 
-    text_inputs = parsed.find_all("input", {"type": "text"})
+    trigger_type_inputs = _get_elements_and_desired_value_through_browser(
+        By.CSS_SELECTOR,
+        "input[type='radio']:checked",
+        lambda v: v.startswith("func") and v[-1].isnumeric(),
+        "name",
+        "value",
+        browser,
+    )
+
+    for name, trigger_type in trigger_type_inputs.items():
+        id_value = name[len("func") :]
+        data[id_value]["trigger_type"] = trigger_type
 
     comment_inputs = _get_elements_and_desired_value_through_browser(
         By.CSS_SELECTOR,
