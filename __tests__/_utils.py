@@ -27,9 +27,7 @@ class AssertionObject:
             with subtests.test(
                 expected_trigger_types=self._trigger_types, actual_trigger_types=values
             ):
-                assert values == [
-                    trigger_type.value for trigger_type in self._trigger_types
-                ]
+                assert values == [trigger_type.value for trigger_type in self._trigger_types]
 
         if self._hotkey_ids:
             parsed = parser(page)
@@ -51,9 +49,7 @@ def _get_elements_through_browser(
 def _get_elements_and_desired_value_through_browser(
     path_type, path, filter, filter_attr, desired_attr, browser, sort_attribute="name"
 ):
-    desired_elements = _get_elements_through_browser(
-        path_type, path, filter, filter_attr, browser
-    )
+    desired_elements = _get_elements_through_browser(path_type, path, filter, filter_attr, browser)
     result = {}
     for element in desired_elements:
         sort_key = element.get_attribute(sort_attribute)
@@ -66,6 +62,26 @@ def _get_elements_and_desired_value_through_browser(
             result[sort_key] = element.get_attribute(desired_attr)
 
     return result
+
+
+def __sanitize_html_inputs(function_signature):
+    r"""
+    >>> __sanitize_html_inputs('ActivateOrOpen(					"<input type="text" name="Window0" id="window0" placeholder="Window" class="keyWidth" oninput="markDirty()" required="">", <span class="w3-hide-large"><br></span>					"<input id="program0" type="text" name="Program0" placeholder="Program" class="keyWidth" oninput="markDirty()" required="">")					<input type="hidden" value="ActivateOrOpen" name="option0" id="option0">')
+    'ActivateOrOpen("\\{Window0\\}", <span class="w3-hide-large"><br></span>"\\{Program0\\}")'
+    >>> __sanitize_html_inputs('Send( "<input name="input0" id="input0" type="text" placeholder="input" oninput="markDirty()" required="">")					<input type="hidden" value="Send" name="option0" id="option0">')
+    'Send("\\{input0\\}")'
+    >>> __sanitize_html_inputs('Replace( "<input type="text" name="input0" id="input0" placeholder="input" oninput="markDirty()" required="">")					<input type="hidden" value="Replace" name="option0" id="option0">')
+    'Replace("\\{input0\\}")'
+    >>> __sanitize_html_inputs('SendUnicodeChar(<input name="input0" id="input0" type="text" placeholder="0x000" class="keyWidth" oninput="markDirty()" required="">)')
+    'SendUnicodeChar(\\{input0\\})'
+    """
+    _arg_regex = r"(\"?)\<input .*?name=\"(.+?)\".+?\>\1"
+
+    function_signature = re.sub(r"\<input type=\"hidden\".+?\/?\>", "", function_signature).strip()
+    function_signature = re.sub(_arg_regex, r"\1\{\2\}\1", function_signature).replace("\t", "")
+    function_signature = re.sub(r"\s+\"", '"', function_signature)
+
+    return function_signature
 
 
 def loaded_data(browser, parser):
@@ -143,26 +159,23 @@ def loaded_data(browser, parser):
         browser=browser,
     )
 
-    _arg_regex = r'\"\<input .+?name=\"(.+?)\".+?\>\"'
-
     for function in selected_functions:
-        html_id = function.get_attribute('id')
+        html_id = function.get_attribute("id")
         id_value = html_id[len("function") :]
 
-        function_signature = function.get_attribute('innerHTML')
-        function_signature = re.sub(_arg_regex, r'"\{\1\}"', function_signature).replace('\t', '')
-        function_signature = re.sub(r"\<input type=\"hidden\".+?\/?\>", "", function_signature).strip()
-        function_signature = re.sub(r"\s+\"", '"', function_signature)
+        function_signature = function.get_attribute("innerHTML")
+        function_signature = __sanitize_html_inputs(function_signature)
 
-        args = _get_elements_and_desired_value_through_browser(By.CSS_SELECTOR, r'input[type="text"]', filter=lambda _: True, filter_attr='name', desired_attr='value', browser=function)
-        
-        # arg_names = [arg.group(1) for arg in re.findall(_input_regex, function)]
-        # arg_values = [arg.group(2) for arg in re.findall(_input_regex, function)]
+        args = _get_elements_and_desired_value_through_browser(
+            By.CSS_SELECTOR,
+            r'input[type="text"]',
+            filter=lambda _: True,
+            filter_attr="name",
+            desired_attr="value",
+            browser=function,
+        )
 
-        data[id_value]["action"] = {
-            "function": function_signature,
-            "args": args
-        }
+        data[id_value]["action"] = {"function": function_signature, "args": args}
         # data[id_value][""]
 
     return dict(data)
