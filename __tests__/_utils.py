@@ -74,11 +74,13 @@ def __sanitize_html_inputs(function_signature):
     'Replace("\\{input0\\}")'
     >>> __sanitize_html_inputs('SendUnicodeChar(<input name="input0" id="input0" type="text" placeholder="0x000" class="keyWidth" oninput="markDirty()" required="">)')
     'SendUnicodeChar(\\{input0\\})'
+    >>> __sanitize_html_inputs('Custom: <textarea name=\"Code0\" id=\"code0\" placeholder=\"code\" class=\"codeArea\" oninput=\"markDirty()\" required=\"\"></textarea>)')
+    'Custom: \\{Code0\\})'
     """
-    _arg_regex = r"(\"?)\<input .*?name=\"(.+?)\".+?\>\1"
+    _arg_regex = r"(\"?)\<(input|textarea) .*?name=\"(.+?)\".+?\>(?:\<\/\2\>)?\1"
 
     function_signature = re.sub(r"\<input type=\"hidden\".+?\/?\>", "", function_signature).strip()
-    function_signature = re.sub(_arg_regex, r"\1\{\2\}\1", function_signature).replace("\t", "")
+    function_signature = re.sub(_arg_regex, r"\1\{\3\}\1", function_signature).replace("\t", "")
     function_signature = re.sub(r"\s+\"", '"', function_signature)
     function_signature = re.sub(r"\<span .+?\<br\/?\>\<\/span\>", "", function_signature)  # remove page break insertions
 
@@ -169,7 +171,7 @@ def loaded_data(browser, parser):
 
         args = _get_elements_and_desired_value_through_browser(
             By.CSS_SELECTOR,
-            r'input[type="text"]',
+            r'input[type="text"], textarea',
             filter=lambda _: True,
             filter_attr="name",
             desired_attr="value",
