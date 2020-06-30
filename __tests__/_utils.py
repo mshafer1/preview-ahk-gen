@@ -67,7 +67,7 @@ def _get_elements_and_desired_value_through_browser(
 def __sanitize_html_inputs(function_signature):
     r"""
     >>> __sanitize_html_inputs('ActivateOrOpen(					"<input type="text" name="Window0" id="window0" placeholder="Window" class="keyWidth" oninput="markDirty()" required="">", <span class="w3-hide-large"><br></span>					"<input id="program0" type="text" name="Program0" placeholder="Program" class="keyWidth" oninput="markDirty()" required="">")					<input type="hidden" value="ActivateOrOpen" name="option0" id="option0">')
-    'ActivateOrOpen("\\{Window0\\}", <span class="w3-hide-large"><br></span>"\\{Program0\\}")'
+    'ActivateOrOpen("\\{Window0\\}", "\\{Program0\\}")'
     >>> __sanitize_html_inputs('Send( "<input name="input0" id="input0" type="text" placeholder="input" oninput="markDirty()" required="">")					<input type="hidden" value="Send" name="option0" id="option0">')
     'Send("\\{input0\\}")'
     >>> __sanitize_html_inputs('Replace( "<input type="text" name="input0" id="input0" placeholder="input" oninput="markDirty()" required="">")					<input type="hidden" value="Replace" name="option0" id="option0">')
@@ -80,6 +80,7 @@ def __sanitize_html_inputs(function_signature):
     function_signature = re.sub(r"\<input type=\"hidden\".+?\/?\>", "", function_signature).strip()
     function_signature = re.sub(_arg_regex, r"\1\{\2\}\1", function_signature).replace("\t", "")
     function_signature = re.sub(r"\s+\"", '"', function_signature)
+    function_signature = re.sub(r"\<span .+?\<br\/?\>\<\/span\>", "", function_signature)  # remove page break insertions
 
     return function_signature
 
