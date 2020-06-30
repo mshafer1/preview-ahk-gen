@@ -33,7 +33,7 @@ def test__url_and_expected_trigger_types__load_page__assert_has_expected_trigger
     ("btw__by_the_way", "/?length=1&comment0=&func0=STRING&skeyValue0=btw&input0=by+the+way&option0=Replace"),
     ("btw__by_the_way_commented", "/?length=1&comment0=btw+%3D+by+the+way&func0=STRING&skeyValue0=btw&input0=by+the+way&option0=Replace"),
     ("ctrl_alt_i__chrome", "/?length=1&comment0=&func0=KEY&skey0%5B%5D=CTRL&skey0%5B%5D=ALT&skeyValue0=i&Window0=ahk_exe+chrome.exe&Program0=chrome.exe&option0=ActivateOrOpen"),
-
+    ("config__open_config", "/?length=1&comment0=%3Bconfig+%3D+open+this+page&func0=STRING&skeyValue0=%60%3Bconfig&option0=OpenConfig"),
 ))
 def test__url__load_page__loaded_data_matches_expected(test_name, url, browser, parser, base_url, snapshot):
     browser.get(base_url + url)
