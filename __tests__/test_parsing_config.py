@@ -36,6 +36,7 @@ def test__url_and_expected_trigger_types__load_page__assert_has_expected_trigger
     ("implies__send_unicode_char", "/?length=1&comment1=%22%3Bimplies%22+is+replaced+with+an+arrow&func1=STRING&skeyValue1=%3Bimplies&input1=0x2192&option1=SendUnicodeChar"),
     ("config__open_config", "/?length=1&comment0=%3Bconfig+%3D+open+this+page&func0=STRING&skeyValue0=%60%3Bconfig&option0=OpenConfig"),
     ("LButton__send_input", "/?length=1&comment0=&func0=KEY&skeyValue0=LButton&input0=b&option0=Send"),
+    ("pandora__activate_or_open_chrome__pandora_com", "/?length=1&comment0=&func0=STRING&skeyValue0=%60%3Bpandora&Window0=pandora&Program0=http%3A%2F%2Fwww.pandora.com&option0=ActivateOrOpenChrome"),
 ))
 def test__url__load_page__loaded_data_matches_expected(test_name, url, browser, parser, base_url, snapshot):
     browser.get(base_url + url)
