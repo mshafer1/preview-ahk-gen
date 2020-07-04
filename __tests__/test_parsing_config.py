@@ -37,7 +37,12 @@ public_examples = [
     '/?length=1&comment0=&func0=KEY&skey0[]=ALT&skeyValue0=F12&input0=%E2%98%BA%E2%99%A5%E2%98%BA&option0=Send',
     '/?length=6&comment0=&func0=KEY&skeyValue0=1&input0=%E2%9A%80&option0=Replace&comment1=&func1=KEY&skeyValue1=2&input1=%E2%9A%81&option1=Replace&comment2=&func2=KEY&skeyValue2=3&input2=%E2%9A%82&option2=Replace&comment3=&func3=KEY&skeyValue3=4&input3=%E2%9A%83&option3=Replace&comment4=&func4=KEY&skeyValue4=5&input4=%E2%9A%84&option4=Replace&comment5=&func5=KEY&skeyValue5=6&input5=%E2%9A%85&option5=Replace',
     '/?length=1&comment0=focus+gimp&func0=KEY&skey0[]=CTRL&skey0[]=ALT&skeyValue0=g&Window0=ahk_exe+gimp.exe&Program0=gimp.exe&option0=ActivateOrOpen',
-    '/?length=2&comment0=&func0=KEY&skeyValue0=LButton&input0=k&option0=Send&comment1=&func1=KEY&skeyValue1=RButton&input1=l&option1=Send'
+    '/?length=2&comment0=&func0=KEY&skeyValue0=LButton&input0=k&option0=Send&comment1=&func1=KEY&skeyValue1=RButton&input1=l&option1=Send',
+    '/?length=1&comment0=&func0=KEY&skey0[]=ALT&skeyValue0=F12&input0=gds&option0=Send',
+    '/?length=1&comment0=&func0=KEY&skey0[]=CTRL&skey0[]=ALT&skeyValue0=t&Window0=Windows+Terminal&Program0=wt&option0=ActivateOrOpen',
+    '/?length=1&comment0=&func0=KEY&skey0[]=CTRL&skey0[]=SHIFT&skeyValue0=q&input0=testing!&option0=Send',
+    
+
 ]
 
 @pytest.mark.parametrize("test_name,url", (
