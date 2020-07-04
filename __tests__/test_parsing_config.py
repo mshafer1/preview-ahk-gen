@@ -41,8 +41,11 @@ public_examples = [
     '/?length=1&comment0=&func0=KEY&skey0[]=ALT&skeyValue0=F12&input0=gds&option0=Send',
     '/?length=1&comment0=&func0=KEY&skey0[]=CTRL&skey0[]=ALT&skeyValue0=t&Window0=Windows+Terminal&Program0=wt&option0=ActivateOrOpen',
     '/?length=1&comment0=&func0=KEY&skey0[]=CTRL&skey0[]=SHIFT&skeyValue0=q&input0=testing!&option0=Send',
-    
-
+    '/?length=1&comment0=&func0=KEY&skeyValue0=MButton&Code0=Send+{PgDn}&option0=Custom',
+    '/?length=1&comment0=&func0=STRING&skeyValue0=+fs&input0=^s&option0=Send',
+    '/?length=1&comment0=&func0=STRING&skeyValue0=afaik&input0=As+far+as+I+Know&option0=Send',
+    '/?length=1&comment0=CTRL+++ALT+++M+=+calendar&func0=KEY&skey0[]=CTRL&skey0[]=ALT&skey0[]=WIN&skeyValue0=q&Window0=Red+Hat+-+Calendar&Program0=https://calendar.google.com/calendar/r/week&option0=ActivateOrOpenChrome',
+    '/?length=1&comment0=CTRL+ALT+WIN+W%3DGmail&func0=KEY&skey0%5B%5D=CTRL&skey0%5B%5D=ALT&skey0%5B%5D=WIN&skeyValue0=w&Window0=Inbox&Program0=https%3A%2F%2Fmail.google.com%2Fmail%2Fu%2F0%2F%23inbox&option0=ActivateOrOpenChrome#inbox&option2=ActivateOrOpenChrome',
 ]
 
 @pytest.mark.parametrize("test_name,url", (
