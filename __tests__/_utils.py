@@ -97,6 +97,18 @@ def __sanitize_html_inputs(function_signature):
     return function_signature
 
 
+def _get_input(
+    selector, matcher, desired_value, id_filter, browser, parser, dest_name, data_store
+):
+    trigger_type_inputs = _get_elements_and_desired_value_through_browser(
+        By.CSS_SELECTOR, selector, matcher, "name", desired_value, browser,
+    )
+
+    for name, trigger_type in trigger_type_inputs.items():
+        id_value = id_filter(name)
+        data_store[id_value][dest_name] = trigger_type
+
+
 def loaded_data(browser, parser):
     data = defaultdict(dict)
 
@@ -112,57 +124,49 @@ def loaded_data(browser, parser):
     # else:
     #     data["hotkey_ids"] = hotkey_ids
 
-    trigger_type_inputs = _get_elements_and_desired_value_through_browser(
-        By.CSS_SELECTOR,
-        "input[type='radio']:checked",
-        lambda v: v.startswith("func") and v[-1].isnumeric(),
-        "name",
-        "value",
-        browser,
+    _get_input(
+        selector="input[type='radio']:checked",
+        matcher=lambda v: v.startswith("func") and v[-1].isnumeric(),
+        desired_value="value",
+        id_filter=lambda name: name[len("func") :],
+        dest_name="trigger_type",
+        browser=browser,
+        parser=parser,
+        data_store=data,
     )
 
-    for name, trigger_type in trigger_type_inputs.items():
-        id_value = name[len("func") :]
-        data[id_value]["trigger_type"] = trigger_type
-
-    comment_inputs = _get_elements_and_desired_value_through_browser(
-        By.CSS_SELECTOR,
-        "input[type='text']",
-        lambda v: v.startswith("comment"),
-        "name",
-        "value",
-        browser,
+    _get_input(
+        selector="input[type='text']",
+        matcher=lambda v: v.startswith("comment"),
+        desired_value="value",
+        id_filter=lambda name: name[len("comment") :],
+        dest_name="comment",
+        browser=browser,
+        parser=parser,
+        data_store=data,
     )
 
-    for name, comment in comment_inputs.items():
-        id_value = name[len("comment") :]
-        data[id_value]["comment"] = comment
-
-    hotstring_inputs = _get_elements_and_desired_value_through_browser(
-        By.CSS_SELECTOR,
-        "input[type='text']",
-        lambda v: v.startswith("skeyValue"),
-        "name",
-        "value",
-        browser,
+    _get_input(
+        selector="input[type='text']",
+        matcher=lambda v: v.startswith("skeyValue"),
+        desired_value="value",
+        id_filter=lambda name: name[len("skeyValue") :],
+        dest_name="trigger_keys",
+        browser=browser,
+        parser=parser,
+        data_store=data,
     )
 
-    for name, trigger_keys in hotstring_inputs.items():
-        id_value = name[len("skeyValue") :]
-        data[id_value]["trigger_keys"] = trigger_keys
-
-    modifier_keys = _get_elements_and_desired_value_through_browser(
-        By.CSS_SELECTOR,
-        "input[type='checkbox']:checked",
-        lambda name: name.startswith("skey") and name.endswith("[]"),
-        "name",
-        "value",
-        browser,
+    _get_input(
+        selector="input[type='checkbox']:checked",
+        matcher=lambda name: name.startswith("skey") and name.endswith("[]"),
+        desired_value="value",
+        id_filter=lambda name: name[len("skey") : -2],
+        dest_name="modifier_keys",
+        browser=browser,
+        parser=parser,
+        data_store=data,
     )
-
-    for name, modifier_key in modifier_keys.items():
-        id_value = name[len("skey") : -2]
-        data[id_value]["modifier_keys"] = modifier_key
 
     selected_functions = _get_elements_through_browser(
         By.CSS_SELECTOR,
@@ -189,6 +193,5 @@ def loaded_data(browser, parser):
         )
 
         data[id_value]["action"] = {"function": function_signature, "args": args}
-        # data[id_value][""]
 
     return dict(data)
