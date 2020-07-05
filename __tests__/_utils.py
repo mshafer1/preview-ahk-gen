@@ -80,7 +80,9 @@ def __sanitize_html_inputs(function_signature):
     'SendUnicodeChar(\\{input0\\})'
     >>> __sanitize_html_inputs('Custom: <textarea name=\"Code0\" id=\"code0\" placeholder=\"code\" class=\"codeArea\" oninput=\"markDirty()\" required=\"\"></textarea>)')
     'Custom: \\{Code0\\})'
-    >>> __sanitize_html_inputs('<span title="Removes what was just typed (for hotstring, but treated as Send for hotkey) and sends the valued\ni.e.  Replace(&quot;by the way&quot;) can be used with a hotstring of btw to cause it to be expanded when typed">Replace(\n    \\{text0\\}\n)</span>')
+    >>> __sanitize_html_inputs('<span title="Removes what was just typed (for hotstring, but treated as Send for hotkey) and sends the valued\ni.e.  Replace(&quot;by the way&quot;) can be used with a hotstring of btw to cause it to be expanded when typed">Replace(\n    "\\{text0\\}"\n)</span>')
+    'Replace("\\{text0\\}")'
+    >>> __sanitize_html_inputs('ActivateOrOpenChrome(<span class="w3-hide-large w3-hide-medium"><br/></span>"<input type="text" name="Window0" id="window0" placeholder="tab name"  class="keyWidth"  oninput="markDirty()" required/>", <span class="w3-hide-large"><br/></span>"<input id="program0" type="text" name="Program0" placeholder="URL"  class="keyWidth"  oninput="markDirty()" required/>")')
     'ActivateOrOpenChrome("\\{Window0\\}", "\\{Program0\\}")'
     """
     _arg_regex = r"(\"?)\<(input|textarea) .*?name=\"(.+?)\".+?\>(?:\<\/\2\>)?\1"
@@ -93,7 +95,7 @@ def __sanitize_html_inputs(function_signature):
         "\t", ""
     )
     function_signature = re.sub(r"(?:\\n|\n)", r"", function_signature)
-    function_signature = re.sub(r"[^,][\s \n]+\"", '"', function_signature)
+    function_signature = re.sub(r"([^,])[\s \n]+\"", r'\1"', function_signature)
     function_signature = re.sub(
         r"\<span .+?\<br\/?\>\<\/span\>", "", function_signature
     )  # remove page break insertions
