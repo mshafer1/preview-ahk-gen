@@ -80,16 +80,20 @@ def __sanitize_html_inputs(function_signature):
     'SendUnicodeChar(\\{input0\\})'
     >>> __sanitize_html_inputs('Custom: <textarea name=\"Code0\" id=\"code0\" placeholder=\"code\" class=\"codeArea\" oninput=\"markDirty()\" required=\"\"></textarea>)')
     'Custom: \\{Code0\\})'
+    >>> __sanitize_html_inputs('<span title="Removes what was just typed (for hotstring, but treated as Send for hotkey) and sends the valued\ni.e.  Replace(&quot;by the way&quot;) can be used with a hotstring of btw to cause it to be expanded when typed">Replace(\n    \\{text0\\}\n)</span>')
+    'ActivateOrOpenChrome("\\{Window0\\}", "\\{Program0\\}")'
     """
     _arg_regex = r"(\"?)\<(input|textarea) .*?name=\"(.+?)\".+?\>(?:\<\/\2\>)?\1"
 
     function_signature = re.sub(
         r"\<input type=\"hidden\".+?\/?\>", "", function_signature
     ).strip()
+    function_signature = re.sub(r"\<span title=\"[\d\D]+?\"[\d\D]*?\>([\d\D]+)\<\/span\>", r"\1", function_signature)  # TODO: after integration, add title to testing
     function_signature = re.sub(_arg_regex, r"\1\{\3\}\1", function_signature).replace(
         "\t", ""
     )
-    function_signature = re.sub(r"\s+\"", '"', function_signature)
+    function_signature = re.sub(r"(?:\\n|\n)", r"", function_signature)
+    function_signature = re.sub(r"[^,][\s \n]+\"", '"', function_signature)
     function_signature = re.sub(
         r"\<span .+?\<br\/?\>\<\/span\>", "", function_signature
     )  # remove page break insertions
