@@ -67,6 +67,7 @@ public_examples = [
     (
         'browser', 
         'eager_compile_browser',
+        'single_source_methods__browser',
     )
 )
 def test__url__load_page__loaded_data_matches_expected(test_name, browser_fixture, url, parser, base_url, snapshot, request, browser):
