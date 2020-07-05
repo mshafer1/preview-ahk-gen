@@ -62,7 +62,15 @@ public_examples = [
         (f'example_{i:03}', page) for i, page in enumerate(public_examples)
     ]
 ))
-def test__url__load_page__loaded_data_matches_expected(test_name, url, browser, parser, base_url, snapshot):
+@pytest.mark.parametrize(
+    "browser_fixture", 
+    (
+        'browser', 
+        'eager_compile_browser',
+    )
+)
+def test__url__load_page__loaded_data_matches_expected(test_name, browser_fixture, url, parser, base_url, snapshot, request, browser):
+    request.getfixturevalue(browser_fixture)
     browser.get(base_url.rstrip("/") + "/" + url.lstrip("/"))
 
     data = loaded_data(browser, parser)

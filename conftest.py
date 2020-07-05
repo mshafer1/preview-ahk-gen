@@ -52,26 +52,45 @@ def pytest_generate_tests(metafunc):
 
 
 @pytest.fixture(scope="session",)
-def browser(driver_path, use_headless):
-    if not browser.result:
+def browser_backend(driver_path, use_headless):
+    if not browser_backend.result:
         opts = Options()
 
         if use_headless:
             opts.add_argument("--headless")
             opts.add_argument("--disable-gpu")
 
-        browser.result = webdriver.Chrome(driver_path, options=opts)
-    yield browser.result
+        browser_backend.result = webdriver.Chrome(driver_path, options=opts)
+    yield browser_backend.result
 
     try:
-        browser.result.close()
+        browser_backend.result.close()
     except:
         pass
-    browser.result = None
+    browser_backend.result = None
+browser_backend.result = None
 
 
-browser.result = None
+@pytest.fixture()
+def browser(browser_backend):
+    browser_backend.delete_all_cookies()
+    yield browser_backend
 
+
+def browser_set_cookie(browser, name, value):
+    browser.add_cookie({"name": name, "value": value})
+
+
+@pytest.fixture()
+def eager_compile_browser(browser):
+    browser_set_cookie(browser, "feature_toggles/EAGER_COMPILE", "true")
+    yield browser
+
+
+@pytest.fixture()
+def single_source_methods__browser(browser):
+    browser_set_cookie(browser, "feature_toggles/SINGLE_SOURCE", "true")
+    yield browser
 
 @pytest.fixture()
 def root_page(browser, base_url):
