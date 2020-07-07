@@ -25,16 +25,16 @@ def pytest_addoption(parser):
         dest="site_path",
         help="Base URL to load for tests",
         required=False,
-        default='http://localhost:4000',
+        default="http://localhost:4000",
     )
 
 
 def pytest_generate_tests(metafunc):
     # This is called for every test. Only get/set command line arguments
     # if the argument is specified in the list of test "fixturenames".
-    driver_path  = metafunc.config.option.driver_path
+    driver_path = metafunc.config.option.driver_path
     use_headless = metafunc.config.option.use_headless
-    site_path    = metafunc.config.option.site_path
+    site_path = metafunc.config.option.site_path
 
     if driver_path is None:
         raise Exception("Must provide --driver_path")
@@ -46,7 +46,7 @@ def pytest_generate_tests(metafunc):
 
     if "use_headless" in metafunc.fixturenames:
         metafunc.parametrize("use_headless", [use_headless], scope="session")
-    
+
     if "site_path" in metafunc.fixturenames:
         metafunc.parametrize("site_path", [site_path])
 
@@ -68,17 +68,25 @@ def browser_backend(driver_path, use_headless):
     except:
         pass
     browser_backend.result = None
+
+
 browser_backend.result = None
 
 
 @pytest.fixture()
-def browser(browser_backend):
+def browser(browser_backend, base_url):
     browser_backend.delete_all_cookies()
+    browser_backend.set_window_size(*BrowserSizes.MEDIUM)
+    browser_backend.get(base_url)
     yield browser_backend
 
 
 def browser_set_cookie(browser, name, value):
-    browser.add_cookie({"name": name, "value": value})
+    browser.add_cookie({
+        "name": name, 
+        "value": value, 
+        # "domain": "localhost"
+        })
 
 
 @pytest.fixture()
@@ -87,10 +95,36 @@ def eager_compile_browser(browser):
     yield browser
 
 
+class BrowserSizes:
+    # width x height
+    SMALL = (360, 560)
+    MEDIUM = (1034, 708)
+    LARGE = (1600, 745)
+
+
+@pytest.fixture()
+def small_browser(browser):
+    browser.set_window_size(*BrowserSizes.SMALL)
+    yield browser
+
+
+@pytest.fixture()
+def medium_browser(browser):
+    browser.set_window_size(*BrowserSizes.MEDIUM)
+    yield browser
+
+
+@pytest.fixture()
+def large_browser(browser):
+    browser.set_window_size(*BrowserSizes.LARGE)
+    yield browser
+
+
 @pytest.fixture()
 def single_source_methods__browser(browser):
     browser_set_cookie(browser, "feature_toggles/SINGLE_SOURCE", "true")
     yield browser
+
 
 @pytest.fixture()
 def root_page(browser, base_url):
