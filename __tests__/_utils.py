@@ -90,12 +90,17 @@ def __sanitize_html_inputs(function_signature):
     function_signature = re.sub(
         r"\<input type=\"hidden\".+?\/?\>", "", function_signature
     ).strip()
-    function_signature = re.sub(r"\<span title=\"[\d\D]+?\"[\d\D]*?\>([\d\D]+)\<\/span\>", r"\1", function_signature)  # TODO: after integration, add title to testing
+    function_signature = re.sub(
+        r"\<span title=\"[\d\D]+?\"[\d\D]*?\>([\d\D]+)\<\/span\>",
+        r"\1",
+        function_signature,
+    )  # TODO: after integration, add title to testing
     function_signature = re.sub(_arg_regex, r"\1\{\3\}\1", function_signature).replace(
         "\t", ""
     )
     function_signature = re.sub(r"(?:\\n|\n)", r"", function_signature)
     function_signature = re.sub(r"([^,])[\s \n]+\"", r'\1"', function_signature)
+    function_signature = re.sub(r",(\"\')", r", \1", function_signature)
     function_signature = re.sub(
         r"\<span .+?\<br\/?\>\<\/span\>", "", function_signature
     )  # remove page break insertions
