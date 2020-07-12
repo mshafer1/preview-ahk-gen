@@ -84,6 +84,8 @@ def __sanitize_html_inputs(function_signature):
     'Replace("\\{text0\\}")'
     >>> __sanitize_html_inputs('ActivateOrOpenChrome(<span class="w3-hide-large w3-hide-medium"><br/></span>"<input type="text" name="Window0" id="window0" placeholder="tab name"  class="keyWidth"  oninput="markDirty()" required/>", <span class="w3-hide-large"><br/></span>"<input id="program0" type="text" name="Program0" placeholder="URL"  class="keyWidth"  oninput="markDirty()" required/>")')
     'ActivateOrOpenChrome("\\{Window0\\}", "\\{Program0\\}")'
+    >>> __sanitize_html_inputs('<span title="A sandbox for creating your own usage of the hotkey/hotstring">Custom:<span class="may-break-space"> </span><span class="w3-hide-large "><br></span><textarea name="Code0" id="code0" placeholder="Code" class="keyWidth" oninput="markDirty()" title="" required=""></textarea></span>')
+    'Custom: \\{Code0\\}'
     """
     _arg_regex = r"(\"?)\<(input|textarea) .*?name=\"(.+?)\".+?\>(?:\<\/\2\>)?\1"
 
@@ -100,10 +102,12 @@ def __sanitize_html_inputs(function_signature):
     )
     function_signature = re.sub(r"(?:\\n|\n)", r"", function_signature)
     function_signature = re.sub(r"([^,])[\s \n]+\"", r'\1"', function_signature)
-    function_signature = re.sub(r",(\"\')", r", \1", function_signature)
+    # function_signature = re.sub(r"\,([\"\'])", r', \1', function_signature)
     function_signature = re.sub(
         r"\<span .+?\<br\/?\>\<\/span\>", "", function_signature
     )  # remove page break insertions
+    function_signature = re.sub(r",([\"\'])", r", \1", function_signature)
+    function_signature = re.sub(r"\:\\\{", r": \\{", function_signature)
 
     return function_signature
 
