@@ -1,5 +1,6 @@
 import json
 import os.path
+import time
 from pathlib import Path
 
 import pytest
@@ -47,6 +48,7 @@ def test__url_and_expected_trigger_types__load_page__assert_has_expected_trigger
 def test__url__load_page__loaded_data_matches_expected(test_name, browser_fixture, url, parser, base_url, snapshot, request, browser):
     request.getfixturevalue(browser_fixture)
     browser.get(base_url.rstrip("/") + "/" + url.lstrip("/"))
+    time.sleep(.5)
 
     data = loaded_data(browser, parser)
 
