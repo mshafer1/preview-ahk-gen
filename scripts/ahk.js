@@ -532,7 +532,7 @@ function select(item, id, backend) {
                 event.stopPropagation();
             });
         } else if (item == 'Custom') {
-            $('#function' + id).html('Custom: <textarea name="Code{0}"  id="code{0}" placeholder="code" class="codeArea"  oninput="markDirty()" required/>)\
+            $('#function' + id).html('Custom: <textarea name="Code{0}"  id="code{0}" placeholder="code" class="codeArea"  oninput="markDirty()" required/>\
                         <input type="hidden" value="Custom" name="option{0}" id="option{0}"/>'.format(id))
 
             $("#code" + id).click(function (event) {
