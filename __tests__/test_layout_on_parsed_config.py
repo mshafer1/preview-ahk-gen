@@ -37,7 +37,7 @@ def test__url_to_load__page_loaded__no_function_div_is_cut_off(
 ):
     request.getfixturevalue(browser_feature_toggles)
     request.getfixturevalue(browser_size)
-    time.sleep(0.5)
+    time.sleep(0.25)
 
     browser.get(base_url.rstrip("/") + "/" + url_to_load.lstrip("/"))
 
