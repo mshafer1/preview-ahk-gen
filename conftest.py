@@ -82,11 +82,13 @@ def browser(browser_backend, base_url):
 
 
 def browser_set_cookie(browser, name, value):
-    browser.add_cookie({
-        "name": name, 
-        "value": value, 
-        # "domain": "localhost"
-        })
+    browser.add_cookie(
+        {
+            "name": name,
+            "value": value,
+            # "domain": "localhost"
+        }
+    )
 
 
 @pytest.fixture()

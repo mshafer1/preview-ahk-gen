@@ -12,6 +12,7 @@ def test__empty_query_string__load_page__assert_has_row_zero(root_page, parser):
         "could not find div with id (shortcut0) in:\n" + root_page.page_source
     )
 
+
 def test__empty_query_string__load_page__has_add_new_row(root_page, parser):
     parsed = parser(root_page.page_source)
 

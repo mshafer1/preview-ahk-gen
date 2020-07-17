@@ -8,7 +8,8 @@ try:
 except ImportError as e:
     print(e)
     from pip._internal import main as _pip_main
-    _pip_main(['install', 'BeautifulSoup4'])
+
+    _pip_main(["install", "BeautifulSoup4"])
     from bs4 import BeautifulSoup
 
 
@@ -17,12 +18,13 @@ try:
 except ImportError as e:
     print(e)
     from pip._internal import main as _pip_main
-    _pip_main(['install', 'selenium'])
+
+    _pip_main(["install", "selenium"])
     from selenium import webdriver
 
 
 class base(unittest.TestCase):
-    url = 'http://localhost:1005'
+    url = "http://localhost:1005"
     wait = 1
 
     @classmethod
