@@ -4,7 +4,7 @@ from selenium.webdriver.common.by import By
 
 
 def test__empty_query_string__load_page__assert_has_row_zero(root_page, parser):
-    time.sleep(1)  # allow a little time for JS to add the shortcut
+    time.sleep(0.25)  # allow a little time for JS to add the shortcut
     parsed = parser(root_page.page_source)
 
     hotkey_row = parsed.body.find("div", attrs={"id": "shortcut0"})
