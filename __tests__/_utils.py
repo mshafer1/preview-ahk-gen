@@ -85,18 +85,30 @@ def __sanitize_html_inputs(function_signature):
     """
     _arg_regex = r"(\"?)\<(input|textarea) .*?name=\"(.+?)\".+?\>(?:\<\/\2\>)?\1"
 
+    # remove hidden option input
     function_signature = re.sub(r"\<input type=\"hidden\".+?\/?\>", "", function_signature).strip()
+
+    # remove title text span
     function_signature = re.sub(
         r"\<span title=\"[\d\D]+?\"[\d\D]*?\>([\d\D]+)\<\/span\>", r"\1", function_signature,
     )  # TODO: after integration, add title to testing
+
+    # repace arg inputs with names
     function_signature = re.sub(_arg_regex, r"\1\{\3\}\1", function_signature).replace("\t", "")
+
+    # clean up newlines
     function_signature = re.sub(r"(?:\\n|\n)", r"", function_signature)
+
+    # remove white space before quote marks, except after commas
     function_signature = re.sub(r"([^,])[\s \n]+\"", r'\1"', function_signature)
-    # function_signature = re.sub(r"\,([\"\'])", r', \1', function_signature)
-    function_signature = re.sub(
-        r"\<span .+?\<br\/?\>\<\/span\>", "", function_signature
-    )  # remove page break insertions
+
+    # remove page break insertions
+    function_signature = re.sub(r"\<span .+?\<br\/?\>\<\/span\>", "", function_signature)
+
+    # add spaces after commas (like in-between parameters)
     function_signature = re.sub(r",([\"\'])", r", \1", function_signature)
+
+    # add space between : and arg
     function_signature = re.sub(r"\:\\\{", r": \\{", function_signature)
 
     return function_signature
