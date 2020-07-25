@@ -261,7 +261,7 @@ function _handle_segment(get_arr, k) {
     const not_has_key = (key) => (!(key in get_arr));
     // if any missing, report error
     if (expected_keys.some(not_has_key)) {
-        return [false, { "ERROR": `Missing crucial values. Must have each of ${expected_keys}` }];
+        return [false, `Missing crucial values. Must have each of ${expected_keys}` ];
     }
 
     var result = {
@@ -326,7 +326,7 @@ function _handle_length(get_arr) {
         _debug_log("Num Keys: " + num_keys + "\n  Get.Length: " + get_arr.Length)
         _debug_log(get_arr)
         // error, display warning and leave
-        result['ERROR'] = `Insufficient data, expecting at least ${num_keys * 4} values. Got (${get_arr})`
+        result['ERROR'] = `Insufficient data, expecting at least ${num_keys * 4} values. Got (${Object.keys(get_arr).length})`
         return result;
     }
 
@@ -364,8 +364,10 @@ function _handle_length(get_arr) {
         }
 
         result[i] = _part[1];
-        i++
     }
+
+    // TODO: if i < get_arr['length'], warning
+
     return result;
 }
 
@@ -404,7 +406,7 @@ function _parse_get(get_arr) {
     }
     _debug_log("Debug Logging enabled");
     if (!('length' in get_arr) && !('indexes' in get_arr)) {
-        result['ERROR'] = `Missing 'indexes' parameter`
+        result['ERROR'] = `Missing 'indexes' parameter in url`
         return result;
     }
 
