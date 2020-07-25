@@ -38,9 +38,7 @@ basic_test_cases = {
 
 
 def _bad_urls():
-    leading_parts = [
-        "length=1",
-    ]
+    leading_parts = [["length=1",], ["indexes={index}"]]
 
     possible_triggers = [
         ["func{index}=KEY", "skeyValue{index}=d",],
@@ -73,10 +71,11 @@ def _bad_urls():
     for trigger in possible_triggers:
         yield "&".join(trigger + possible_actions[0]).format(index=1)
 
-    for trigger in possible_triggers:
-        for part in trigger:
-            other_parts = [t for t in trigger if t != part]
-            yield "&".join(leading_parts + other_parts + possible_actions[0]).format(index=1)
+    for leading_part in leading_parts:
+        for trigger in possible_triggers:
+            for part in trigger:
+                other_parts = [t for t in trigger if t != part]
+                yield "&".join(leading_part + other_parts + possible_actions[0]).format(index=1)
 
 
 bad_urls = list(["?" + url for url in _bad_urls()])
