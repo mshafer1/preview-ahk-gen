@@ -21,7 +21,7 @@ try {
     //Disable function - from https://stackoverflow.com/a/16788240
     jQuery.fn.extend({
         disable: function (state) {
-            console.log("disable " + state)
+            _debug_log("disable " + state)
             return this.each(function () {
                 var $this = $(this);
                 if ($this.is('input, button, textarea, select'))
@@ -49,7 +49,7 @@ try {
                     doneTyping = function (el) {
                         if (!timeoutReference) return;
                         timeoutReference = null;
-                        // console.log($(el));
+                        // _debug_log($(el));
                         callback.call($(el));
                     };
                 return this.each(function (i, el) {
@@ -77,7 +77,7 @@ try {
                 });
             }
         });
-        console.log("donetyping loaded");
+        _debug_log("donetyping loaded");
     })(jQuery);
 } catch (error) {
     // pass
@@ -122,10 +122,15 @@ function init() {
     ready()
     load_get()
     parse_get();
-    console.log("GET: ", GET)
-    console.log("CONFIG: ", CONFIG)
+    _debug_log("GET: ", GET)
+    _debug_log("CONFIG: ", CONFIG)
+
+    if('ERROR' in CONFIG) {
+        alert(CONFIG['ERROR'])
+    }
+
     num_keys = Object.keys(CONFIG).length;
-    if (num_keys == 0) {
+    if (num_keys == 0 || 'ERROR' in CONFIG) {
         _debug_log("New row")
         newRow()
         return;
@@ -147,7 +152,7 @@ function init() {
     _debug_log("GET: ", GET)
     _debug_log("CONFIG: ", CONFIG)
 
-    console.log("Num Keys: ", num_keys)
+    _debug_log("Num Keys: ", num_keys)
     for (i = 0; i < num_keys; i++) {
         newRow();
         setup_row(i, CONFIG);
@@ -374,12 +379,12 @@ function _handle_length(get_arr) {
 function _handle_indexes(get_arr) {
     var result = {}
     var indexes = get_arr['indexes'].split(',');
-    console.log("Indexes: ", indexes)
+    _debug_log("Indexes: ", indexes)
     _debug_log("Indexes: ", indexes);
     for (var i = 0; i < indexes.length; i++) {
         var index = indexes[i];
         var _parts = _handle_segment(get_arr, index);
-        console.log("try_handle: ", _parts)
+        _debug_log("try_handle: ", _parts)
         if (!(_parts[0])) {
             result['ERROR'] = _parts[1];
             break;
@@ -402,7 +407,7 @@ function _parse_get(get_arr) {
     }
     if (GET_KEYS.enable_eager_compile in get_arr) {
         EAGER_COMPILE_ENABLED = true;
-        console.log("Enabling Eager Compile.")
+        _debug_log("Enabling Eager Compile.")
     }
     _debug_log("Debug Logging enabled");
     if (!('length' in get_arr) && !('indexes' in get_arr)) {
@@ -586,7 +591,7 @@ function select(item, id, backend) {
                 event.stopPropagation();
             });
         } else if (item == 'OpenConfig') {
-            console.log("open config");
+            _debug_log("open config");
             $('#function' + id).html('OpenConfig() <input type="hidden" value="OpenConfig" name="option{0}" id="option{0}"/>'.format(id))
         }
 
@@ -633,7 +638,7 @@ function eager_compile(changed_id, changed_index, changed_key) {
     }
 
     var check = _check_form(false, true);
-    console.log("Ready for 'compile':", check);
+    _debug_log("Ready for 'compile':", check);
     if (!check) {
         return;
     }
@@ -641,11 +646,17 @@ function eager_compile(changed_id, changed_index, changed_key) {
     var form = $(`#hotkeyForm`)[0];
     var data = new FormData(form);
     var querystring = new URLSearchParams(data).toString();
-    console.log("New URL: ", querystring);
+    _debug_log("New URL: ", querystring);
     window.history.pushState({ "updatedfield": changed_id, "index": String(changed_index), "changed_key": String(changed_key) }, "AHK Generator", "/?" + querystring);
     _debug_log(`/?${querystring}`);
     var get_arry = _load_get(`/?${querystring}`);
     _debug_log('get_array', get_arry);
+
+    if ('error' in get_arry) {
+        _debug_log('ERRORS: ', get_arry['error'])
+        return;
+    }
+
     var config = _parse_get(get_arry);
     _setup_download(config);
     _update_fields(null, config);
@@ -657,7 +668,7 @@ function _handle_pop_state(event) {
         window.location.href = document.location;
         return;
     }
-    console.log("location: ", document.location, "\nstate: ", event.state);
+    _debug_log("location: ", document.location, "\nstate: ", event.state);
     var get_arry = _load_get(window.location.search);
     var config = _parse_get(get_arry);
     _setup_download(config);
@@ -665,7 +676,7 @@ function _handle_pop_state(event) {
 }
 
 function _update_fields(state, config) {
-    console.log("State: ", state);
+    _debug_log("State: ", state);
     if (state == null) {
         num_keys = Object.keys(config).length;
         if (num_keys == 0) {
@@ -684,7 +695,7 @@ function _update_fields(state, config) {
     }
 
     // TODO: handle row deletion and creation
-    console.log("Setup Row from Config: ", config);
+    _debug_log("Setup Row from Config: ", config);
     setup_row(state.index, config);
     // var new_value = config[state.index][state.changed_key];
     // if('[]' in state.changed_key) {
@@ -716,9 +727,9 @@ function _register_done_typing(parent_identifier, id) {
     if (!EAGER_COMPILE_ENABLED) {
         return
     }
-    console.log("Registering donetyping");
+    _debug_log("Registering donetyping");
     var inputs = $(`${parent_identifier} .js_donetyping`);
-    console.log('Inputs: ', inputs);
+    _debug_log('Inputs: ', inputs);
     inputs.donetyping(function () { eager_compile($(this).attr('id'), id, $(this).attr('name').replace(/\d*$/g, '')); });
 }
 
@@ -732,8 +743,10 @@ function setHotString(id, backend) {
     var _handle_change = (EAGER_COMPILE_ENABLED) ? '' : 'onchange="markDirty()"';
     var _register_change = (EAGER_COMPILE_ENABLED) ? 'js_donetyping' : '';
 
-    console.log("configuring #optionsShortcut" + id)
-    $('#optionsShortcut' + id).html(`{% include _trigger_hotstring.html %}`)
+    _debug_log("configuring #optionsShortcut" + id)
+    $('#optionsShortcut' + id).html(`<div class="w3-col s6">
+												<input type="text" id="skey${id}string" placeholder="string" name="skeyValue${id}" class="${_register_change}" ${_handle_change} required/>
+                                            </div>`)
     _register_done_typing("#optionsShortcut" + id, id);
     if (!backend) {
         markDirty()
@@ -780,7 +793,7 @@ function scrollToTop() {
 
 function download() {
     _cancel_id = setTimeout(function () { alert("Uh, oh. It seems we can't download the file right now - you can still copy and paste it"); }, 800)
-    console.log("downloading")
+    _debug_log("downloading")
     _download_link = document.getElementById('downloadLink');
     if ('msSaveBlob' in window.navigator) {
         var _header_len = DOWNLOAD_FILE_HEADER.length;
