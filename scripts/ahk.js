@@ -310,6 +310,15 @@ function _handle_segment(get_arr, k) {
     return [true, result];
 }
 
+function _get_index_from_name(name) {
+    var matches = name.match(/\d+$/);
+    var index = -1;
+    if(matches) {
+        index = matches[0];
+    }
+    return index;
+}
+
 function _handle_length(get_arr) {
     var result = {}
     var num_keys = get_arr['length'];
@@ -320,12 +329,34 @@ function _handle_length(get_arr) {
         result['ERROR'] = `Insufficient data, expecting at least ${num_keys * 4} values. Got (${get_arr})`
         return result;
     }
-    console.log("Number of keys: ", num_keys)
-    for (i = 0, k = 0; i < get_arr['length']; k++) {
-        if (!('func' + k in get_arr)) {
+
+    var keys = Object.keys(get_arr);
+    var stored_functions = keys.filter(function(key, index){
+        return key.indexOf("func") == 0;
+    });
+    _debug_log("Function keys:", stored_functions);
+
+    var inverted_config = {}
+    var length = keys.length;
+    for(var i = 0; i < length; i++) {
+        var key = keys[i];
+        var index = _get_index_from_name(key)
+        if (index == -1) {
             continue;
         }
-        _part = _handle_segment(get_arr, k);
+
+        if (!(index in inverted_config)) {
+            inverted_config[index] = {}
+        }
+        inverted_config[index][key] = get_arr[key];
+    }
+    _debug_log("Inverted Config: ", inverted_config)
+
+    _debug_log("Number of keys: ", num_keys)
+    var inverted_keys = Object.keys(inverted_config)
+    for (var i = 0; i < inverted_keys.length; i++) {
+        var index = inverted_keys[i]
+        _part = _handle_segment(get_arr, index);
         _debug_log(_part)
         if (!_part[0]) {
             result['ERROR'] = _part[1];
