@@ -1,0 +1,39 @@
+<div class="w3-container" style="display:relative" id="shortcut${index}">
+    <div style="width: 15px; display:inline-block; position:absolute; margin-top:15px; margin-left:8px;" class="draggabble_handle">
+        <i class="fas fa-grip-vertical"></i>
+    </div>
+    <div style="display:inline-block position:abosolute; left:15px; right:0px; width:100%;">
+<div class="w3-row-padding w3-padding-16">
+    <input type="hidden" value="${index}" class="js-index"/>
+    
+    <div class="w3-col l6 m12 s12">															
+            <div class="w3-row-padding">                                                    
+                <div class="w3-col m3 s6">                                                  
+                    <input type="text" placeholder="comment" name="comment${index}" id="comment${index}" class="fullWidth" oninput="markDirty()"/>
+                </div>
+                <div class="w3-col m2 s6">  
+                    <label title="Press a combination of buttons/keys to trigger an action"><input type="radio" id="func${index}KEY" name="func${index}" value="KEY" onclick="setHotKey(${index});" checked /> Hotkey</label>
+                    <span class="w3-hide-small"><br/></span>
+                    <label title="Type out a sequence to trigger an action"><input type="radio" id="func${index}STRING" name="func${index}" value="STRING" onclick="setHotString(\'${index}\');"> Hotstring</input></label>
+                </div>
+                <div class="w3-col m7 s12 w3-right">
+                    <div id="optionsShortcut${index}" class="w3-row">` + genHotkeyRegion(index) + `</div>
+                </div>
+            </div>
+        </div>
+    <div class="w3-col l6 m12 s12">
+        <div class="w3-row-padding">
+            <div class="w3-col l11 m8 s10 w3-dropdown-click defaultCursor">
+                <div class="w3-btn w3-centered fitInParent" onclick="dropdown(\'${index}\')"><span id="function${index}" >(Choose an action)</span><i id="arrow${index}" class="fa fa-caret-right" aria-hidden="true"></i></div>
+                <div id="key${index}" class="w3-dropdown-content w3-border onTop">
+                        {% for action in site.data.methods %}
+                        <button type="button" class="w3-btn w3-margin" onclick="select(\'{{ action.code_key }}\', \'${index}\')" title='{{ action.description | strip }}'>{{ action.preview_signature }}</button>
+                        <br/>{% endfor %}
+                    </div>
+            </div>
+            <div class="w3-col l1 m4 s2">
+                <button type="button" onclick="destroy(\'${index}\')" class="w3-btn w3-margin-left w3-margin-right" id="destroy${index}"><i class="far fa-times-circle" title="Delete hotkey"></i></button>
+            </div>
+        </div>
+    </div>
+</div></div></div>
