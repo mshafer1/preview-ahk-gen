@@ -1,5 +1,6 @@
 ---
 ---
+
 GET_KEYS = {
     enable_debug_logging: 'DEBUG_LOG',
     enable_eager_compile: 'EAGER_COMPILE',
@@ -105,11 +106,15 @@ function _debug_log() {
 }
 
 function init() {
+    try {
     $('#hotkeyRegion').sortable({
         placeholder: 'placeholder',
         handle: '.draggabble_handle',
         update: function (event, ui) { markDirty() },
     });
+    } catch (_) {
+        // pass - just means that jquery-ui did not load, so won't be able to drag-drop
+    }
     window.onpopstate = _handle_pop_state; // lazy do this so that jest doesn't encounter it
     DEBUG_LOGGING_ENABLED = FEATURE_TOGGLES.DEBUG_LOGGING
     EAGER_COMPILE_ENABLED = FEATURE_TOGGLES.EAGER_COMPILE
