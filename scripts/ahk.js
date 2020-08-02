@@ -692,25 +692,7 @@ function _register_done_typing(parent_identifier, id) {
 function genHotkeyRegion(id) {
     var _handle_change = (EAGER_COMPILE_ENABLED) ? '' : 'oninput="markDirty()"';
     var _register_change = (EAGER_COMPILE_ENABLED) ? 'js_donetyping' : '';
-    return `<div class="w3-row w3-col s6">
-                <div class="w3-col s6">
-                    <label><input type="checkbox" id="skey{0}CTRL" name="skey{0}[]" value="CTRL" ${ _handle_change } class="${ _register_change }"/><span class="w3-hide-small w3-hide-medium">Control</span><span class="w3-hide-large">CTRL</span></label>
-                </div>
-                <div class="w3-col s6">
-                    <label><input type="checkbox" id="skey{0}SHIFT" name="skey{0}[]" value="SHIFT" ${ _handle_change } class="${ _register_change }"/><span class="w3-hide-small w3-hide-medium">Shift</span><span class="w3-hide-large">Shift</span></label>
-                </div>
-                <div class="w3-col s6">
-                    <label><input type="checkbox" id="skey{0}ALT" name="skey{0}[]" value="ALT" ${ _handle_change } class="${ _register_change }"/><span class="w3-hide-small w3-hide-medium">Alt</span><span class="w3-hide-large">Alt</span></label>
-                </div>
-                <div class="w3-col s6">
-                    <label><input type="checkbox" id="skey{0}WIN" name="skey{0}[]" value="WIN" ${ _handle_change } class="${ _register_change }"/><span class="w3-hide-small w3-hide-medium">Windows</span><span class="w3-hide-large">Win</span></label>
-                </div>
-            </div>
-            <div class="w3-row w3-col s6">
-                <div class="w3-col s12">
-                    <input type="text" placeholder="key" id="skey{0}key" ${ _handle_change} name="skeyValue{0}" class="keyWidth ${_register_change}"  autocomplete="off"  list="specialKeys" title="Set the key to hit (special keys are available for autocomplete" required/>
-                </div>
-            </div>`.format(id);
+    return `{% include _trigger_hotkey.html %}`.format(id);
 }
 
 function setHotString(id, backend) {
@@ -718,9 +700,7 @@ function setHotString(id, backend) {
     var _register_change = (EAGER_COMPILE_ENABLED) ? 'js_donetyping' : '';
 
     console.log("configuring #optionsShortcut" + id)
-    $('#optionsShortcut' + id).html(`<div class="w3-col s6">
-												<input type="text" id="skey${id}string" placeholder="string" name="skeyValue${id}" class="${_register_change}" ${_handle_change} required/>
-                                            </div>`)
+    $('#optionsShortcut' + id).html(`{% include _trigger_hotstring.html %}`)
     _register_done_typing("#optionsShortcut" + id, id);
     if (!backend) {
         markDirty()
