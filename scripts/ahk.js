@@ -469,8 +469,10 @@ index = 0;
 count = 0;
 
 function dropdown(id) {
+    var event = window.event;
+
     _debug_log('#key' + id);
-    if ($('#key' + id).hasClass("w3-show")) {
+    if (event.defaultPrevented || $('#key' + id).hasClass("w3-show")) {
         _debug_log("Hide it");
         $(".w3-dropdown-content").removeClass("w3-show");
         $(".w3-dropdown-content").removeClass("onTop");
@@ -788,6 +790,10 @@ function download() {
     clearTimeout(_cancel_id);
 }
 
+function _prevent_default() {
+    var event = window.event;
+    event.preventDefault();
+}
 
 try {
     // from https://stackoverflow.com/a/11279639
