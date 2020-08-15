@@ -11,7 +11,6 @@ def isAlertPresent(driver):
     except Exception:
         return False
 
-# length=1&skey1%5B%5D=CTRL&skey1%5B%5D=ALT&skeyValue1=d&input1=by+the+way&option1=Replace
 @pytest.mark.parametrize(
     "url", test_data.bad_urls, ids=test_data.bad_urls
 )

@@ -336,10 +336,6 @@ function _handle_length(get_arr) {
     }
 
     var keys = Object.keys(get_arr);
-    var stored_functions = keys.filter(function(key, index){
-        return key.indexOf("func") == 0;
-    });
-    _debug_log("Function keys:", stored_functions);
 
     var inverted_config = {}
     var length = keys.length;
@@ -371,7 +367,7 @@ function _handle_length(get_arr) {
         result[i] = _part[1];
     }
 
-    // TODO: if i < get_arr['length'], warning
+    // TODO: if i < get_arr['length'], warning??
 
     return result;
 }
@@ -447,7 +443,7 @@ function _check_form(show_error = true, check_required_fields = false) {
             //it doesn't exist
             result = false;
             if (show_error) {
-                alert("Must select a function for all rows");
+                alert("Must select an action for each trigger");
             }
             return result;
         }
