@@ -209,8 +209,14 @@ function replaceAll(str, find, replace) { // from https://stackoverflow.com/a/11
 
 function _load_get(location) {
     var result = {}
+
+    if (location.indexOf('compressed=') != -1) {
+        var location = location.split('?')[0] + '?' + unzip(location.split('compressed=')[1])
+    }
+
     if (location.indexOf('?') == -1) {
         _debug_log("No query string");
+        _debug_log(location);
         return result;
     }
     var query = location
@@ -465,6 +471,25 @@ function _check_form(show_error = true, check_required_fields = false) {
             result = false;
             // TODO: show error??
         }
+    }
+
+    if (!result) {
+        return result;
+    }
+
+    if(FEATURE_TOGGLES.ENABLE_COMPRESSION) {
+        // https://stackoverflow.com/a/317000??
+
+        var formData = new FormData($('#hotkeyForm')[0]);
+        searchParams = new URLSearchParams(formData);
+        _debug_log("params: ", searchParams);
+        queryString = searchParams.toString();
+        _debug_log("QueryString:", queryString);
+        var zipped = zip(queryString);
+        _debug_log("Zipped:", zipped);
+        $('#compressedValued').val(zipped)
+        $('#compressedForm').submit();
+        return false;
     }
 
     return result; // return false to cancel form action
