@@ -10,6 +10,25 @@ function displayMessage(header, message, ok_action, closable) {
     _show_modal();
 }
 
+function displayYesNoLinks(header, message, ok_dest, no_dest, closable) {
+    if(closable === undefined) closable=true;
+    $('#modalDialogue_okBTN').off();
+    $('#modalDialogue_noBTN').off();
+
+    var footer = `<div class="w3-row-padding">
+    <div class="w3-col s2">&nbsp;</div>
+    <div class="w3-col s2"><a href="${ok_dest}" class="w3-btn w3-black" id="modalDialogue_okBTN">Yes</a></div>
+    
+    <div class="w3-col s4">&nbsp;</div>
+    
+    <div class="w3-col s2"><a href="${no_dest}" class="w3-btn w3-black" id="modalDialogue_noBTN">No</a></div>
+    <div class="w3-col s2">&nbsp;</div>
+
+    </div>`
+    _setup_modal(header, message, footer, closable)
+    _show_modal();
+}
+
 function displayYesNo(header, message, ok_action, no_action, closable) {
     if(closable === undefined) closable=true;
     $('#modalDialogue_okBTN').off();

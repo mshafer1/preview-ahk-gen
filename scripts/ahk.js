@@ -496,22 +496,37 @@ function _check_form(show_error = true, check_required_fields = false) {
         _debug_log("QueryString:", queryString);
 
         var should_shorten = user_requested_shortened;
-        if (!user_requested_shortened && (location.href + queryString).length > 8.2e3) {
+        var limit = 8.2e3
+        if(location.host.startsWith('localhost')) {
+            limit = 2e3
+        }
+        console.log(limit)
+        console.log("length:", (location.href + queryString).length)
+        if (!user_requested_shortened && (location.href + queryString).length > limit) {
+            console.log("warning that should shorten")
             // TODO, show dialogue and set should_shorten based on result
-            
+            displayYesNoLinks(
+                "Shorten URL?",
+                `<p>The new configuration URL may be too long (${location.href.length + queryString.length} is greater than ${limit}).</p><p>Shorten the URL?<br/>("YES" to shorten and proceed, "NO" to proceed as is, or close this dialogue to cancel)</p>`, 
+                `/?${_get_shortened_url(queryString)}`, `/?${queryString}`, 
+                true
+            )
+            return false;
         }
 
         if (should_shorten) {
-            var zipped = zip(queryString);
-            _debug_log("Zipped:", zipped);
-            $('#compressedValued').val(zipped)
-            $('#compressedForm').submit();
-            return false;
+            window.location.href='/?' + _get_shortened_url(queryString)
+            return false
         }
-        
     }
 
     return result; // return false to cancel form action
+}
+
+function _get_shortened_url(queryString) {
+    var zipped = zip(queryString);
+    _debug_log("Zipped:", zipped);
+    return `compressed=${zipped}`;
 }
 
 function ready() {
