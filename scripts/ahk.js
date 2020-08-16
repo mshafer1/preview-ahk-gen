@@ -119,6 +119,9 @@ function init() {
     DEBUG_LOGGING_ENABLED = FEATURE_TOGGLES.DEBUG_LOGGING
     EAGER_COMPILE_ENABLED = FEATURE_TOGGLES.EAGER_COMPILE
     _debug_log("Debug logging enabled");
+    if(FEATURE_TOGGLES.ENABLE_COMPRESSION) {
+        $('#CompressData').show()
+    }
     ready()
     load_get()
     parse_get();
@@ -211,7 +214,10 @@ function _load_get(location) {
     var result = {}
 
     if (location.indexOf('compressed=') != -1) {
-        var location = location.split('?')[0] + '?' + unzip(location.split('compressed=')[1])
+        _debug_log("Original query string: ", location)
+        var compressed_data = unescape(location.split('compressed=')[1])
+        var location = location.split('?')[0] + '?' + unzip(compressed_data)
+        _debug_log("Uncompressed query string:", location)
     }
 
     if (location.indexOf('?') == -1) {
@@ -477,19 +483,32 @@ function _check_form(show_error = true, check_required_fields = false) {
         return result;
     }
 
+    // Shorten URL
     if(FEATURE_TOGGLES.ENABLE_COMPRESSION) {
         // https://stackoverflow.com/a/317000??
 
+        var user_requested_shortened = $('#chkBox_CompressData').is(':checked')
+        _debug_log("User requested shorten:", user_requested_shortened);
         var formData = new FormData($('#hotkeyForm')[0]);
         searchParams = new URLSearchParams(formData);
         _debug_log("params: ", searchParams);
         queryString = searchParams.toString();
         _debug_log("QueryString:", queryString);
-        var zipped = zip(queryString);
-        _debug_log("Zipped:", zipped);
-        $('#compressedValued').val(zipped)
-        $('#compressedForm').submit();
-        return false;
+
+        var should_shorten = user_requested_shortened;
+        if (!user_requested_shortened && (location.href + queryString).length > 8.2e3) {
+            // TODO, show dialogue and set should_shorten based on result
+            
+        }
+
+        if (should_shorten) {
+            var zipped = zip(queryString);
+            _debug_log("Zipped:", zipped);
+            $('#compressedValued').val(zipped)
+            $('#compressedForm').submit();
+            return false;
+        }
+        
     }
 
     return result; // return false to cancel form action
