@@ -7,6 +7,14 @@ GET_KEYS = {
 }
 
 try {
+    const zipper = require('../../_site/scripts/zip.js'); // pull in the cod gen'd version
+    unzip = zipper.unzip;
+    zip = zipper.zip;
+} catch (error) {
+    // pass
+}
+
+try {
     $(window).load(init);
 
     // Create Element.remove() function if not exist
@@ -215,9 +223,26 @@ function _load_get(location) {
 
     if (location.indexOf('compressed=') != -1) {
         _debug_log("Original query string: ", location)
-        var compressed_data = unescape(location.split('compressed=')[1])
-        var location = location.split('?')[0] + '?' + unzip(compressed_data)
-        _debug_log("Uncompressed query string:", location)
+        var values = location.split('?')[1].split('&')
+
+        var version = 0
+        var compressed_data = ''
+
+        for(i = 0; i < values.length; i++) {
+            parts = values[i].split('=')
+            key = parts[0]
+            value = parts[1]
+            if (key == 'version') {
+                version = unescape(value)
+            }
+            if (key == 'compressed') {
+                compressed_data = unescape(value)
+            }
+        }
+
+        console.log("version:", version, "data:", compressed_data)
+        var location = location.split('?')[0] + '?' + unzip(compressed_data, version)
+        console.log("Uncompressed query string:", location)
     }
 
     if (location.indexOf('?') == -1) {
@@ -504,7 +529,6 @@ function _check_form(show_error = true, check_required_fields = false) {
         console.log("length:", (location.href + queryString).length)
         if (!user_requested_shortened && (location.href + queryString).length > limit) {
             console.log("warning that should shorten")
-            // TODO, show dialogue and set should_shorten based on result
             displayYesNoLinks(
                 "Shorten URL?",
                 `<p>The new configuration URL may be too long (${location.href.length + queryString.length} is greater than ${limit}).</p><p>Shorten the URL?<br/>("YES" to shorten and proceed, "NO" to proceed as is, or close this dialogue to cancel)</p>`, 
@@ -526,7 +550,7 @@ function _check_form(show_error = true, check_required_fields = false) {
 function _get_shortened_url(queryString) {
     var zipped = zip(queryString);
     _debug_log("Zipped:", zipped);
-    return `compressed=${zipped}`;
+    return `version=1.0&compressed=${zipped}`;
 }
 
 function ready() {
@@ -883,6 +907,7 @@ try {
 
     exports._load_get = _load_get;
     exports._parse_get = _parse_get;
+    exports._get_shortened_url = _get_shortened_url;
 } catch (error) {
     // pass
 }

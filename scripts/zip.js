@@ -10,8 +10,12 @@ function zip(string) {
     return result;
 }
 
-function unzip(compressed) {
-    var result = LZUTF8.decompress(compressed,  {inputEncoding: 'Base64'} );
+function unzip(compressed, version) {
+    var result = ''
+    version = (version == undefined)? "1.0": version
+    if (version == "1.0") {
+        result = LZUTF8.decompress(compressed,  {inputEncoding: 'Base64'} );
+    }
     return result
 }
 
@@ -21,5 +25,5 @@ try {
     exports.unzip = unzip;
 } catch (error) {
     // pass
-    console.log(error);
+    console.debug(error);
 }
