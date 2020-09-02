@@ -240,6 +240,9 @@ function _load_get(location) {
             }
         }
 
+        // if loading compressed page, default to maintaining compression
+        $('#chkBox_CompressData').attr('checked', true)
+
         _debug_log("version:", version, "data:", compressed_data)
         var location = location.split('?')[0] + '?' + unzip(compressed_data, version)
         _debug_log("Uncompressed query string:", location)
