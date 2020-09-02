@@ -1,6 +1,19 @@
 const ahk_js = require('../../_site/scripts/ahk.js'); // pull in the cod gen'd version
 const zip = require('../../_site/scripts/zip.js'); // pull in the cod gen'd version
 
+try {
+    global.jQuery = require('jquery');
+    $ = function () {
+        var result = {}
+        result.attr = () => {}
+        return result
+    }
+} catch (error) {
+    // pass
+    console.warn(error)
+    console.warn("Failed to import jquery")
+}
+
 describe('_load_get', () => {
     var empty = {};
     it('returns empty for empty query', () => {

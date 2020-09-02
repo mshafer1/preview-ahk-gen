@@ -1,5 +1,18 @@
 const ahk_js = require('../../_site/scripts/ahk.js'); // pull in the cod gen'd version
 
+try {
+    global.jQuery = require('jquery');
+    $ = function () {
+        var result = {}
+        result.attr = () => {}
+        return result
+    }
+} catch (error) {
+    // pass
+    console.warn(error)
+    console.warn("Failed to import jquery")
+}
+
 describe('_get_shortened_url', () => {
     it('takes a string and returns compressed data consistently', () => {
         var input = 'lorem ipsum';
