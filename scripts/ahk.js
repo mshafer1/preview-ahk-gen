@@ -1,6 +1,12 @@
 ---
 ---
 
+try {
+    const $ = require('jquery')
+} catch (error) {
+    // pass
+}
+
 GET_KEYS = {
     enable_debug_logging: 'DEBUG_LOG',
     enable_eager_compile: 'EAGER_COMPILE',
