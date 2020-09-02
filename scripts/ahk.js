@@ -531,7 +531,9 @@ function _check_form(show_error = true, check_required_fields = false) {
             console.log("warning that should shorten")
             displayYesNoLinks(
                 "Shorten URL?",
-                `<p>The new configuration URL may be too long (${location.href.length + queryString.length} is greater than ${limit}).</p><p>Shorten the URL?<br/>("YES" to shorten and proceed, "NO" to proceed as is, or close this dialogue to cancel)</p>`, 
+                `<p>The new configuration URL may be too long (${location.href.length + queryString.length} is 
+                greater than ${limit}).</p><p>Shorten the URL?<br/>("YES"
+                 to shorten and proceed, "NO" to proceed as is, or close this dialogue to cancel)</p>`, 
                 `/?${_get_shortened_url(queryString)}`, `/?${queryString}`, 
                 true
             )
