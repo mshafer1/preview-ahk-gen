@@ -240,9 +240,9 @@ function _load_get(location) {
             }
         }
 
-        console.log("version:", version, "data:", compressed_data)
+        _debug_log("version:", version, "data:", compressed_data)
         var location = location.split('?')[0] + '?' + unzip(compressed_data, version)
-        console.log("Uncompressed query string:", location)
+        _debug_log("Uncompressed query string:", location)
     }
 
     if (location.indexOf('?') == -1) {
@@ -525,10 +525,10 @@ function _check_form(show_error = true, check_required_fields = false) {
         if(location.host.startsWith('localhost')) {
             limit = 2e3
         }
-        console.log(limit)
-        console.log("length:", (location.href + queryString).length)
+        _debug_log(limit)
+        _debug_log("length:", (location.href + queryString).length)
         if (!user_requested_shortened && (location.href + queryString).length > limit) {
-            console.log("warning that should shorten")
+            _debug_log("warning that should shorten")
             displayYesNoLinks(
                 "Shorten URL?",
                 `<p>The new configuration URL may be too long (${location.href.length + queryString.length} is 
