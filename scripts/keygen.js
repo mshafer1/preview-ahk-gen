@@ -75,6 +75,8 @@ setTitleMatchMode, 2 ; set title match mode to "contains"
                 func = data[i]['Code']
             } else if (option == 'SendUnicodeChar') {
                 func = 'SendUnicodeChar(' + data[i]['input'] + ')';
+            } else if (option == 'LockWorkStation') {
+                func = `LockWorkStation()`;
             } else if(option == 'OpenConfig') {
                 func = '\r\nOpenConfig()\r\nreturn';
             }
@@ -118,6 +120,10 @@ OpenConfig()
     Run, "${document.location.toString().replace(/\%/g, '`%')}"
 }
 
+LockWorkStation()
+{
+    DllCall("LockWorkStation")
+}
 ActivateOrOpen(window, program)
 {
 	; check if window exists

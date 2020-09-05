@@ -54,6 +54,11 @@
   description: Open this script's config page in default browser
   preview_signature: OpenConfig()
   example: ''
+- code_key: LockWorkStation
+  description: Tell windows to lock computer
+  preview_signature: LockWorkStation()
+  example: Use CTRL+L to lock work station
+  example_url: /?indexes=0&comment0=&func0=KEY&skey0%5B%5D=CTRL&skeyValue0=l&option0=LockWorkStation
 - code_key: Custom
   description: A sandbox for creating your own usage of the hotkey/hotstring
   example: ''
