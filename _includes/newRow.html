@@ -27,7 +27,7 @@
         <div class="w3-row-padding">
             <div class="w3-col l11 m8 s10 w3-dropdown-click defaultCursor">
                 <div class="w3-btn w3-centered fitInParent" onclick="dropdown(\'${index}\')"><span id="function${index}" >(Choose an action)</span> <i id="arrow${index}" class="fa fa-caret-right" aria-hidden="true"></i></div>
-                <div id="key${index}" class="w3-dropdown-content w3-border onTop w3-padding">
+                <div id="key${index}" class="w3-dropdown-content w3-border onTop lightGrey w3-padding">
                         {% for action in site.data.methods %}
                         <button type="button" class="w3-btn" onclick="select(\'{{ action.code_key }}\', \'${index}\')" title='{{ action.description | strip }}'>{{ action.preview_signature }}</button>
                         {% if action.example %}
