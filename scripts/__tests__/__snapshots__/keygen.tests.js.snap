@@ -6,6 +6,22 @@ exports[`when keygen given {"0":{"func":"KEY","skeyValue":"a","modifiers[]":["CT
 "
 `;
 
+exports[`when keygen given {"0":{"func":"KEY","skeyValue":"a","modifiers[]":["CTRL","ALT"],"Program":"http://dictionary.reference.com/","Window":"dictionary.com","option":"ActivateOrOpenChrome"}}, then matches snapshot 1`] = `
+"^!a::ActivateOrOpenChrome(\\"dictionary.com\\", \\"http://dictionary.reference.com/\\")
+
+"
+`;
+
+exports[`when keygen given {"0":{"func":"KEY","skeyValue":"a","modifiers[]":["CTRL","ALT"],"option":"Custom","Code":"\\n            Send, ^c\\n            Sleep 50\\n            Run, http://www.google.com/search?q=%clipboard%\\n            Return"}}, then matches snapshot 1`] = `
+"^!a::
+            Send, ^c
+            Sleep 50
+            Run, http://www.google.com/search?q=%clipboard%
+            Return
+
+"
+`;
+
 exports[`when keygen given {"0":{"func":"KEY","skeyValue":"a","modifiers[]":["CTRL","ALT"],"option":"LockWorkStation"}}, then matches snapshot 1`] = `
 "^!a::LockWorkStation()
 
@@ -40,6 +56,22 @@ exports[`when keygen given {"0":{"func":"KEY","skeyValue":"a","modifiers[]":["CT
 
 exports[`when keygen given {"0":{"func":"STRING","skeyValue":";implies","Program":"cmd","Window":"ahk_exe cmd.exe","option":"ActivateOrOpen"}}, then matches snapshot 1`] = `
 ":*c:;implies::ActivateOrOpen(\\"ahk_exe cmd.exe\\", \\"cmd\\")
+
+"
+`;
+
+exports[`when keygen given {"0":{"func":"STRING","skeyValue":";implies","Program":"http://dictionary.reference.com/","Window":"dictionary.com","option":"ActivateOrOpenChrome"}}, then matches snapshot 1`] = `
+":*c:;implies::ActivateOrOpenChrome(\\"dictionary.com\\", \\"http://dictionary.reference.com/\\")
+
+"
+`;
+
+exports[`when keygen given {"0":{"func":"STRING","skeyValue":";implies","option":"Custom","Code":"\\n            Send, ^c\\n            Sleep 50\\n            Run, http://www.google.com/search?q=%clipboard%\\n            Return"}}, then matches snapshot 1`] = `
+":*c:;implies::
+            Send, ^c
+            Sleep 50
+            Run, http://www.google.com/search?q=%clipboard%
+            Return
 
 "
 `;

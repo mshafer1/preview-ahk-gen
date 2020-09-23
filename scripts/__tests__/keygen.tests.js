@@ -39,6 +39,19 @@ const actions = [
     },
     {
         "option": "OpenConfig",
+    },
+    {
+        "option": "Custom",
+        "Code": `
+            Send, ^c
+            Sleep 50
+            Run, http://www.google.com/search?q=%clipboard%
+            Return`,
+    },
+    {
+        "Program": "http://dictionary.reference.com/",
+        "Window": "dictionary.com",
+        "option": "ActivateOrOpenChrome",
     }
 ]
 
