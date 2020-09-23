@@ -46,58 +46,43 @@ function configured_region(data) {
 
             key += data[i]['skeyValue']
             key += '::'
-
-            func = "\r\n    return";
-            option = data[i]['option'];
-            if (option == 'Send' || option == 'Replace') { // replace doesn't make sense for hotkey, so treat like send
-                func = 'send, ' + data[i]["input"];
-            } else if (option == 'ActivateOrOpen') {
-                func = 'ActivateOrOpen("' + data[i]["Window"] + '", "' + data[i]["Program"] + '")';
-            } else if (option == 'ActivateOrOpenChrome') {
-                func = 'ActivateOrOpenChrome("' + data[i]["Window"] + '", "' + data[i]["Program"] + '")';
-            } else if (option == 'Custom') {
-                func = data[i]['Code']
-            } else if (option == 'SendUnicodeChar') {
-                func = 'SendUnicodeChar(' + data[i]['input'] + ')';
-            } else if (option == 'LockWorkStation') {
-                func = `LockWorkStation()`;
-            } else if (option == 'TurnMonitorsOff') {
-                func = `TurnMonitorsOff()`;
-            } else if (option == 'OpenConfig') {
-                func = '\r\nOpenConfig()\r\nreturn';
-            }
-            else {
-                console.warn("Unknown method: ", option)
-            }
-
-            key += func
         } else {
             // hotstring
             key += ':*c:' + data[i]['skeyValue'] + "::"
-            option = data[i]['option'];
-            func = "\r\n    return";
-            if (option == 'Send') { // replace doesn't make sense for hotkey, so treat like send
-                func = '\r\nsend, ' + data[i]["input"] + '\r\nreturn';
-            } else if (option == 'ActivateOrOpen') {
-                func = '\r\nActivateOrOpen("' + data[i]["Window"] + '", "' + data[i]["Program"] + '")\r\nreturn';
-            } else if (option == 'Replace') {
-                func = data[i]["input"];
-            } else if (option == 'ActivateOrOpenChrome') {
-                func = '\r\nActivateOrOpenChrome("' + data[i]["Window"] + '", "' + data[i]["Program"] + '")\r\nreturn';
-            } else if (option == 'Custom') {
-                func = data[i]['Code']
-            } else if (option == 'SendUnicodeChar') {
-                func = '\r\nSendUnicodeChar(' + data[i]['input'] + ')\r\nreturn';
-            // } else if (option == 'LockWorkStation') {
-            //     func = `LockWorkStation()`;
-            // } else if (option == 'TurnMonitorsOff') {
-            //     func = `TurnMonitorsOff()`;
-            } else if (option == 'OpenConfig') {
-                func = '\r\nOpenConfig()\r\nreturn';
-            }
-
-            key += func
         }
+
+        func = "\r\n    return";
+        option = data[i]['option'];
+        if (option == 'Send') {
+            func = 'send, ' + data[i]["input"];
+        } else if (option == 'ActivateOrOpen') {
+            func = 'ActivateOrOpen("' + data[i]["Window"] + '", "' + data[i]["Program"] + '")';
+        } else if (option == 'Replace') {
+            if (data[i][func] == "KEY") {
+                // replace doesn't make sense for hotkey, so treat like send
+                func = '\r\nsend, ' + data[i]["input"] + '\r\nreturn';
+            }
+            else {
+                func = 'ActivateOrOpen("' + data[i]["Window"] + '", "' + data[i]["Program"] + '")';
+            }
+        } else if (option == 'ActivateOrOpenChrome') {
+            func = 'ActivateOrOpenChrome("' + data[i]["Window"] + '", "' + data[i]["Program"] + '")';
+        } else if (option == 'Custom') {
+            func = data[i]['Code']
+        } else if (option == 'SendUnicodeChar') {
+            func = 'SendUnicodeChar(' + data[i]['input'] + ')';
+        } else if (option == 'LockWorkStation') {
+            func = `LockWorkStation()`;
+        } else if (option == 'TurnMonitorsOff') {
+            func = `TurnMonitorsOff()`;
+        } else if (option == 'OpenConfig') {
+            func = '\r\nOpenConfig()\r\nreturn';
+        }
+        else {
+            console.warn("Unknown method: ", option)
+        }
+
+        key += func
 
         if ('comment' in data[i]) {
             key = ';' + data[i]['comment'] + '\r\n' + key;
