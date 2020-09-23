@@ -1,6 +1,6 @@
 // from https://stackoverflow.com/a/31221374/8100990
 if (!String.prototype.includes) {
-    String.prototype.includes = function() {
+    String.prototype.includes = function () {
         'use strict';
         return String.prototype.indexOf.apply(this, arguments) !== -1;
     };
@@ -10,8 +10,8 @@ if (!String.prototype.includes) {
 if (!Array.prototype.includes) {
     Object.defineProperty(Array.prototype, "includes", {
         enumerable: false,
-        value: function(obj) {
-            var newArr = this.filter(function(el) {
+        value: function (obj) {
+            var newArr = this.filter(function (el) {
                 return el == obj;
             });
             return newArr.length > 0;
@@ -19,24 +19,8 @@ if (!Array.prototype.includes) {
     });
 }
 
-function keygen(data) {
-    console.log("Keygen: ")
-    console.log(data)
-    value = `
-; *********************** Header - some configuration  ***********************
-#NoEnv  ; Recommended for performance and compatibility with future AutoHotkey releases.
-; #Warn  ; Enable warnings to assist with detecting common errors. (disabled by default)
-SendMode Input  ; Recommended for new scripts due to its superior speed and reliability.
-SetWorkingDir %A_ScriptDir%  ; Ensures a consistent starting directory.
-setTitleMatchMode, 2 ; set title match mode to "contains"
-
-; this code was auto generated at:
-; ${document.location.toString()}
-
-; *********************** Configured region - selected functions ************
-
-`
-
+function configured_region(data) {
+    var value = '';
     // load in data
     //console.log(data)
     for (i in data) {
@@ -79,8 +63,11 @@ setTitleMatchMode, 2 ; set title match mode to "contains"
                 func = `LockWorkStation()`;
             } else if (option == 'TurnMonitorsOff') {
                 func = `TurnMonitorsOff()`;
-            } else if(option == 'OpenConfig') {
+            } else if (option == 'OpenConfig') {
                 func = '\r\nOpenConfig()\r\nreturn';
+            }
+            else {
+                console.warn("Unknown method: ", option)
             }
 
             key += func
@@ -101,7 +88,11 @@ setTitleMatchMode, 2 ; set title match mode to "contains"
                 func = data[i]['Code']
             } else if (option == 'SendUnicodeChar') {
                 func = '\r\nSendUnicodeChar(' + data[i]['input'] + ')\r\nreturn';
-            } else if(option == 'OpenConfig') {
+            // } else if (option == 'LockWorkStation') {
+            //     func = `LockWorkStation()`;
+            // } else if (option == 'TurnMonitorsOff') {
+            //     func = `TurnMonitorsOff()`;
+            } else if (option == 'OpenConfig') {
                 func = '\r\nOpenConfig()\r\nreturn';
             }
 
@@ -114,12 +105,35 @@ setTitleMatchMode, 2 ; set title match mode to "contains"
 
         value += key + "\r\n\r\n"
     }
+
+    return value
+}
+
+function keygen(data, location) {
+    console.log("Keygen: ")
+    console.log(data)
+    value = `
+; *********************** Header - some configuration  ***********************
+#NoEnv  ; Recommended for performance and compatibility with future AutoHotkey releases.
+; #Warn  ; Enable warnings to assist with detecting common errors. (disabled by default)
+SendMode Input  ; Recommended for new scripts due to its superior speed and reliability.
+SetWorkingDir %A_ScriptDir%  ; Ensures a consistent starting directory.
+setTitleMatchMode, 2 ; set title match mode to "contains"
+
+; this code was auto generated at:
+; ${location}
+
+; *********************** Configured region - selected functions ************
+
+`
+    value += configured_region(data)
+
     // append custom functions
     value += `
 ; *********************** Provided Functions ********************************
 OpenConfig()
 {
-    Run, "${document.location.toString().replace(/\%/g, '`%')}"
+    Run, "${location.replace(/\%/g, '`%')}"
 }
 
 LockWorkStation()
@@ -229,4 +243,16 @@ EncodeInteger(ref, val)
 
     //return script
     return value
+}
+
+
+try {
+    // from https://stackoverflow.com/a/11279639
+    // if module is availble, we must be getting included via a 'require', export methods
+    var exports = module.exports = {};
+
+    exports.keygen = keygen;
+    exports.configured_region = configured_region;
+} catch (error) {
+    // pass
 }
