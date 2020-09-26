@@ -663,8 +663,13 @@ function select(item, id, backend) {
     }
 
     if (!backend) {
+        if(FEATURE_TOGGLES.EAGER_COMPILE) {
+            eager_compile(id, index, `option${index}`) // TODO: test re-aranging rows and then triggering
+        }
+        else {
         markDirty()
     }
+}
 }
 
 function _mark_helper(dirty = true) {
