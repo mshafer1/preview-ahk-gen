@@ -50,10 +50,11 @@ try {
     //   @timeout:  (default=1000) timeout, in ms, to to wait before triggering event if not
     //              caused by blur.
     // Requires jQuery 1.7+ 
+    // edit - made checkboxes fire call callback without delay
     ; (function ($) {
         $.fn.extend({
             donetyping: function (callback, timeout) {
-                timeout = timeout || 5e2; // default to 1/2 s
+                timeout = timeout || 8e2; // default to .8 s
                 var timeoutReference,
                     doneTyping = function (el) {
                         if (!timeoutReference) return;
@@ -74,11 +75,22 @@ try {
                         // Check if timeout has been set. If it has, "reset" the clock and
                         // start over again.
                         if (timeoutReference) clearTimeout(timeoutReference);
+
+                        if($el.is(':checkbox')) {
+                            // check boxes are intantanious - note, just calling doneTyping here doesn't work, not sure why not
                         timeoutReference = setTimeout(function () {
                             // if we made it here, our timeout has elapsed. Fire the
                             // callback
                             doneTyping(el);
+                            }, 0);
+                        }
+                        else {
+                            timeoutReference = setTimeout(function () {
+                                // if we made it here, our timeout has elapsed. Fire the
+                                // callback
+                                doneTyping(el);
                         }, timeout);
+                        }
                     }).on('blur', function () {
                         // If we can, fire the event since we're leaving the field
                         doneTyping(el);
