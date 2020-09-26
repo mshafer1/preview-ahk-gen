@@ -479,7 +479,7 @@ function parse_get() {
     CONFIG = _parse_get(GET);
 }
 
-function _check_form(show_error = true, check_required_fields = false) {
+function _check_form(show_error = true, check_required_fields = false, should_redirect = true) {
     _debug_log("Checking for submit")
     result = true;
 
@@ -525,41 +525,7 @@ function _check_form(show_error = true, check_required_fields = false) {
     }
 
     // Shorten URL
-    if(FEATURE_TOGGLES.ENABLE_COMPRESSION) {
-        // https://stackoverflow.com/a/317000??
-
-        var user_requested_shortened = $('#chkBox_CompressData').is(':checked')
-        _debug_log("User requested shorten:", user_requested_shortened);
-        var formData = new FormData($('#hotkeyForm')[0]);
-        searchParams = new URLSearchParams(formData);
-        _debug_log("params: ", searchParams);
-        queryString = searchParams.toString();
-        _debug_log("QueryString:", queryString);
-
-        if (user_requested_shortened) {
-            window.location.href='/?' + _get_shortened_url(queryString)
-            return false
-        }
-
-        var limit = 8.2e3
-        if(location.host.startsWith('localhost')) {
-            limit = 2e3
-        }
-        _debug_log(limit)
-        _debug_log("length:", (location.href + queryString).length)
-        if ((location.href + queryString).length > limit) {
-            _debug_log("warning that should shorten")
-            displayYesNoLinks(
-                "Shorten URL?",
-                `<p>The new configuration URL may be too long (${location.href.length + queryString.length} is 
-                greater than ${limit}).</p><p>Shorten the URL?<br/>("YES"
-                 to shorten and proceed, "NO" to proceed as is, or close this dialogue to cancel)</p>`, 
-                `/?${_get_shortened_url(queryString)}`, `/?${queryString}`, 
-                true
-            )
-            return false;
-        }
-    }
+    should_compress(should_redirect);
 
     return result; // return false to cancel form action
 }
@@ -727,6 +693,48 @@ function markClean() {
     _mark_helper(false);
 }
 
+function should_compress(should_redirect) {
+    if (!FEATURE_TOGGLES.ENABLE_COMPRESSION) {
+        return false;
+    }
+
+    // https://stackoverflow.com/a/317000??
+
+    var user_requested_shortened = $('#chkBox_CompressData').is(':checked')
+    _debug_log("User requested shorten:", user_requested_shortened);
+    var formData = new FormData($('#hotkeyForm')[0]);
+    searchParams = new URLSearchParams(formData);
+    _debug_log("params: ", searchParams);
+    queryString = searchParams.toString();
+    _debug_log("QueryString:", queryString);
+
+    if (user_requested_shortened) {
+        if (should_redirect) {
+            window.location.href = '/?' + _get_shortened_url(queryString)
+        }
+        return true
+    }
+
+    var limit = 8.2e3
+    if (location.host.startsWith('localhost')) {
+        limit = 2e3
+    }
+    _debug_log(limit)
+    _debug_log("length:", (location.href + queryString).length)
+    if ((location.href + queryString).length > limit) {
+        _debug_log("warning that should shorten")
+        displayYesNoLinks(
+            "Shorten URL?",
+            `<p>The new configuration URL may be too long (${location.href.length + queryString.length} is 
+                greater than ${limit}).</p><p>Shorten the URL?<br/>("YES"
+                 to shorten and proceed, "NO" to proceed as is, or close this dialogue to cancel)</p>`,
+            `/?${_get_shortened_url(queryString)}`, `/?${queryString}`,
+            true
+        )
+        return false;
+    }
+}
+
 function eager_compile(changed_id, changed_index, changed_key) {
     markDirty();
     if (!EAGER_COMPILE_ENABLED) {
@@ -742,6 +750,11 @@ function eager_compile(changed_id, changed_index, changed_key) {
     var form = $(`#hotkeyForm`)[0];
     var data = new FormData(form);
     var querystring = new URLSearchParams(data).toString();
+
+    if(should_compress(false)) {
+        querystring = _get_shortened_url(querystring);
+    }
+
     _debug_log("New URL: ", querystring);
     window.history.pushState({ "updatedfield": changed_id, "index": String(changed_index), "changed_key": String(changed_key) }, "AHK Generator", "/?" + querystring);
     _debug_log(`/?${querystring}`);
