@@ -4,7 +4,7 @@
 
 GET_KEYS = {
     enable_debug_logging: 'DEBUG_LOG',
-    enable_eager_compile: 'EAGER_COMPILE',
+        enable_eager_compile: 'EAGER_COMPILE',
 }
 
 try {
@@ -78,10 +78,10 @@ try {
 
                         if($el.is(':checkbox')) {
                             // check boxes are intantanious - note, just calling doneTyping here doesn't work, not sure why not
-                        timeoutReference = setTimeout(function () {
-                            // if we made it here, our timeout has elapsed. Fire the
-                            // callback
-                            doneTyping(el);
+                            timeoutReference = setTimeout(function () {
+                                // if we made it here, our timeout has elapsed. Fire the
+                                // callback
+                                doneTyping(el);
                             }, 0);
                         }
                         else {
@@ -89,7 +89,7 @@ try {
                                 // if we made it here, our timeout has elapsed. Fire the
                                 // callback
                                 doneTyping(el);
-                        }, timeout);
+                            }, timeout);
                         }
                     }).on('blur', function () {
                         // If we can, fire the event since we're leaving the field
@@ -128,11 +128,11 @@ function _debug_log() {
 
 function init() {
     try {
-    $('#hotkeyRegion').sortable({
-        placeholder: 'placeholder',
-        handle: '.draggabble_handle',
-        update: function (event, ui) { markDirty() },
-    });
+        $('#hotkeyRegion').sortable({
+            placeholder: 'placeholder',
+            handle: '.draggabble_handle',
+            update: function (event, ui) { markDirty() },
+        });
     } catch (_) {
         // pass - just means that jquery-ui did not load, so won't be able to drag-drop
     }
@@ -140,7 +140,7 @@ function init() {
     DEBUG_LOGGING_ENABLED = FEATURE_TOGGLES.DEBUG_LOGGING
     EAGER_COMPILE_ENABLED = FEATURE_TOGGLES.EAGER_COMPILE
     _debug_log("Debug logging enabled");
-    if(FEATURE_TOGGLES.ENABLE_COMPRESSION) {
+    if (FEATURE_TOGGLES.ENABLE_COMPRESSION) {
         $('#CompressData').show()
         _register_done_typing('#CompressData')
     }
@@ -150,7 +150,7 @@ function init() {
     _debug_log("GET: ", GET)
     _debug_log("CONFIG: ", CONFIG)
 
-    if('ERROR' in CONFIG) {
+    if ('ERROR' in CONFIG) {
         alert(CONFIG['ERROR'])
     }
 
@@ -242,7 +242,7 @@ function _load_get(location) {
         var version = 0
         var compressed_data = ''
 
-        for(i = 0; i < values.length; i++) {
+        for (i = 0; i < values.length; i++) {
             parts = values[i].split('=')
             key = parts[0]
             value = parts[1]
@@ -320,7 +320,7 @@ function _handle_segment(get_arr, k) {
     const not_has_key = (key) => (!(key in get_arr));
     // if any missing, report error
     if (expected_keys.some(not_has_key)) {
-        return [false, `Missing crucial values. Must have each of ${expected_keys}` ];
+        return [false, `Missing crucial values. Must have each of ${expected_keys}`];
     }
 
     var result = {
@@ -372,7 +372,7 @@ function _handle_segment(get_arr, k) {
 function _get_index_from_name(name) {
     var matches = name.match(/\d+$/);
     var index = -1;
-    if(matches) {
+    if (matches) {
         index = matches[0];
     }
     return index;
@@ -393,7 +393,7 @@ function _handle_length(get_arr) {
 
     var inverted_config = {}
     var length = keys.length;
-    for(var i = 0; i < length; i++) {
+    for (var i = 0; i < length; i++) {
         var key = keys[i];
         var index = _get_index_from_name(key)
         if (index == -1) {
@@ -598,7 +598,7 @@ function select(item, id, backend) {
         {% unless forloop.first %}else {% endunless %} if (item == '{{ method.code_key }}') {
             result = `{% include _method_signatures/_generic.html method=method %}`
         } {% endfor %}
-    
+
         $('#function' + id).html(result);
         _register_done_typing(`#function${id}`, id)
     }
@@ -667,9 +667,9 @@ function select(item, id, backend) {
             eager_compile(id, index, `option${index}`) // TODO: test re-aranging rows and then triggering
         }
         else {
-        markDirty()
+            markDirty()
+        }
     }
-}
 }
 
 function _mark_helper(dirty = true) {
@@ -816,12 +816,12 @@ function _update_fields(state, config) {
     // var new_value = config[state.index][state.changed_key];
     // if('[]' in state.changed_key) {
     //     // handle check boxes   
-        
+
     // } else {
     //     // handle text
     //     $(`#${state.updatedfield}`).val(new_value);
     // }
-    
+
 
 }
 
