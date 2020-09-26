@@ -65,6 +65,7 @@ exports[`when keygen given {"0":{"func":"STRING","skeyValue":";implies","Program
 ActivateOrOpen(\\"ahk_exe cmd.exe\\", \\"cmd\\")
 return
 
+
 "
 `;
 
@@ -72,6 +73,7 @@ exports[`when keygen given {"0":{"func":"STRING","skeyValue":";implies","Program
 ":*c:;implies::
 ActivateOrOpenChrome(\\"dictionary.com\\", \\"http://dictionary.reference.com/\\")
 return
+
 
 "
 `;
@@ -90,6 +92,7 @@ exports[`when keygen given {"0":{"func":"STRING","skeyValue":";implies","option"
 ":*c:;implies::
 LockWorkStation()
 return
+
 
 "
 `;
@@ -113,6 +116,7 @@ exports[`when keygen given {"0":{"func":"STRING","skeyValue":";implies","option"
 send, b
 return
 
+
 "
 `;
 
@@ -121,6 +125,7 @@ exports[`when keygen given {"0":{"func":"STRING","skeyValue":";implies","option"
 SendUnicodeChar(0x2192)
 return
 
+
 "
 `;
 
@@ -128,6 +133,7 @@ exports[`when keygen given {"0":{"func":"STRING","skeyValue":";implies","option"
 ":*c:;implies::
 TurnMonitorsOff()
 return
+
 
 "
 `;
