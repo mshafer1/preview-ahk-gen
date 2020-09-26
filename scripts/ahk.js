@@ -142,6 +142,7 @@ function init() {
     _debug_log("Debug logging enabled");
     if(FEATURE_TOGGLES.ENABLE_COMPRESSION) {
         $('#CompressData').show()
+        _register_done_typing('#CompressData')
     }
     ready()
     load_get()
@@ -599,6 +600,7 @@ function select(item, id, backend) {
         } {% endfor %}
     
         $('#function' + id).html(result);
+        _register_done_typing(`#function${id}`, id)
     }
     else {
         if (item == 'ActivateOrOpen') {
@@ -741,7 +743,7 @@ function eager_compile(changed_id, changed_index, changed_key) {
         return;
     }
 
-    var check = _check_form(false, true);
+    var check = _check_form(false, true, false);
     _debug_log("Ready for 'compile':", check);
     if (!check) {
         return;
@@ -839,7 +841,7 @@ function _register_done_typing(parent_identifier, id) {
     _debug_log("Registering donetyping");
     var inputs = $(`${parent_identifier} .js_donetyping`);
     _debug_log('Inputs: ', inputs);
-    inputs.donetyping(function () { eager_compile($(this).attr('id'), id, $(this).attr('name').replace(/\d*$/g, '')); });
+    inputs.donetyping(function () { eager_compile($(this).attr('id'), id, $(this).attr('name').replace(/\d*$/g, '')); $(this).focus() });
 }
 
 function genHotkeyRegion(id) {
