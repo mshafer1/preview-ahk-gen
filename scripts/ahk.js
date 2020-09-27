@@ -664,7 +664,7 @@ function select(item, id, backend) {
 
     if (!backend) {
         if(FEATURE_TOGGLES.EAGER_COMPILE) {
-            eager_compile(id, index, `option${index}`) // TODO: test re-aranging rows and then triggering
+            eager_compile(id, index, `option${id}`) // TODO: test re-aranging rows and then triggering
         }
         else {
             markDirty()
@@ -743,6 +743,7 @@ function should_compress(should_redirect) {
 }
 
 function eager_compile(changed_id, changed_index, changed_key) {
+    _debug_log("Asked to Eager Gen: ", changed_id, changed_index, changed_key)
     markDirty();
     if (!EAGER_COMPILE_ENABLED) {
         return;
