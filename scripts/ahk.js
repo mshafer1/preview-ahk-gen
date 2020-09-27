@@ -775,6 +775,7 @@ function eager_compile(changed_id, changed_index, changed_key) {
     }
 
     var config = _parse_get(get_arry);
+    CONFIG = config // there are still some references to the global
     _setup_download(config);
     _update_fields(null, config);
     markClean();
@@ -885,7 +886,7 @@ function loaded() {
 
 function _setup_download(configuration) {
     _debug_log("seeting url");
-    script = keygen(CONFIG, document.location.toString())
+    script = keygen(configuration, document.location.toString())
     $('#downloadLink').attr('href', DOWNLOAD_FILE_HEADER + encodeURIComponent(script));
 
     $('#scriptZone').html('<p><pre><code class="autohotkey">' + script + '</code></pre></p>');
