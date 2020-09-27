@@ -63,7 +63,7 @@ function configured_region(data) {
         } else if (option == 'Replace') {
             if (trigger_type == "KEY") {
                 // replace doesn't make sense for hotkey, so treat like send
-                func = '\r\nsend, ' + data[i]["input"] + '\r\nreturn';
+                func = 'send, ' + data[i]["input"];
             }
             else {
                 func =  data[i]["input"];
