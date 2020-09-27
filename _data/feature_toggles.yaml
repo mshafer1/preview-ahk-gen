@@ -1,5 +1,5 @@
 ---
-- name: Eager Compile
+- name: Eager Generation
   code_key: EAGER_COMPILE
   default: false
   description: apply changes to the URL and generated script as your going
