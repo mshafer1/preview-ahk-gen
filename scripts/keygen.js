@@ -94,7 +94,7 @@ function configured_region(data) {
             key = ';' + data[i]['comment'] + '\r\n' + key;
         }
 
-        value += key + "\r\n\r\n"
+        value += key + "\r\n\r\n\r\n"
     }
 
     return value
