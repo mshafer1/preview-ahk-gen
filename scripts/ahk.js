@@ -131,7 +131,7 @@ function init() {
         $('#hotkeyRegion').sortable({
             placeholder: 'placeholder',
             handle: '.draggabble_handle',
-            update: function (event, ui) { markDirty() },
+            update: function (event, ui) { eager_compile() },
         });
     } catch (_) {
         // pass - just means that jquery-ui did not load, so won't be able to drag-drop
@@ -777,7 +777,7 @@ function eager_compile(changed_id, changed_index, changed_key) {
     var config = _parse_get(get_arry);
     CONFIG = config // there are still some references to the global
     _setup_download(config);
-    _update_fields(null, config);
+
     markClean();
 }
 
@@ -828,16 +828,19 @@ function _update_fields(state, config) {
 }
 
 function destroy(id) {
-    $('#shortcut' + id).remove() //destroy row from table
+    var changed_id = '#shortcut' + id
+    $(changed_id).remove() //destroy row from table
 
-    markDirty();
+    var index = $(`#shortcu${id} .js-index`).val()
+
+    eager_compile( changed_id, index, 'DELETE');
 }
 
 function setHotKey(id, backend) {
     $('#optionsShortcut' + id).html(genHotkeyRegion(id))
     _register_done_typing('#optionsShortcut' + id, id);
     if (!backend) {
-        markDirty()
+        eager_compile()
     }
 }
 
@@ -867,7 +870,7 @@ function setHotString(id, backend) {
                                             </div>`)
     _register_done_typing("#optionsShortcut" + id, id);
     if (!backend) {
-        markDirty()
+        eager_compile()
     }
 }
 
