@@ -690,6 +690,7 @@ function select(item, id, backend) {
 function _mark_helper(dirty = true) {
     //disable download link
     $('.js_download_btn').disable(dirty);
+    $('.js_dirtiable_btn').disable(dirty);
     _out_of_date = (dirty) ? "Script out of date, submit to update to configuration changes" : "";
     _generate = (dirty) ? "" : "Select to generate new script";
     $('.js_download_btn').prop('title', _out_of_date);
@@ -850,15 +851,25 @@ function loaded() {
     _setup_download(CONFIG);
 }
 
+function _uri_escape_string(string) {
+    var string = string.replace("http://localhost:4000", "https://ahkgen.com") // FB doesn't like localhost links, point at production
+    var result = encodeURIComponent(string).replaceAll("&", "%26");
+    return result;
+}
+
 function _setup_download(configuration) {
     _debug_log("seeting url");
-    script = keygen(CONFIG, document.location.toString())
+    var page_location = document.location.toString()
+    script = keygen(CONFIG, page_location)
     $('#downloadLink').attr('href', DOWNLOAD_FILE_HEADER + encodeURIComponent(script));
 
     $('#scriptZone').html('<p><pre><code class="autohotkey">' + script + '</code></pre></p>');
     $('#skipToScript').removeClass("w3-hide");
     $('#scriptZone').removeClass("w3-hide");
-    $('.js_download_btn').removeClass("w3-hide");
+    $(".js_fb_share_btn").attr('href', `https://www.facebook.com/sharer/sharer.php?u=${_uri_escape_string(page_location)}&amp;src=sdkpreparse`)
+    $(".js_email_share_btn").attr("href", `mailto:?to=&subject=Check out this AutoHotkey script I wrote using ahkgen.com
+    &body=Here is the link:%0d%0a${_uri_escape_string(page_location)}`)
+    $('.js_share_region').removeClass("w3-hide");
     hljs.highlightBlock($('#scriptZone')[0]);
 }
 
