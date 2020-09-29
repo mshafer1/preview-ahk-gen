@@ -4,7 +4,7 @@
 
 GET_KEYS = {
     enable_debug_logging: 'DEBUG_LOG',
-        enable_eager_compile: 'EAGER_COMPILE',
+        enable_eager_generation: 'EAGER_GENERATION',
 }
 
 try {
@@ -107,7 +107,7 @@ try {
 var GET = {}
 var LOADED = false;
 var DEBUG_LOGGING_ENABLED = false;
-var EAGER_COMPILE_ENABLED = false;
+var EAGER_GENERATION_ENABLED = false;
 var DOWNLOAD_FILE_HEADER = 'data:text/plain;charset=utf-8,' + `\ufeff`; // UTF8-BOM helps AHK to know how to handle non-English chars in a Send
 
 // from https://stackoverflow.com/a/31221374/8100990
@@ -131,14 +131,14 @@ function init() {
         $('#hotkeyRegion').sortable({
             placeholder: 'placeholder',
             handle: '.draggabble_handle',
-            update: function (event, ui) { eager_compile() },
+            update: function (event, ui) { eager_generation() },
         });
     } catch (_) {
         // pass - just means that jquery-ui did not load, so won't be able to drag-drop
     }
     window.onpopstate = _handle_pop_state; // lazy do this so that jest doesn't encounter it
     DEBUG_LOGGING_ENABLED = FEATURE_TOGGLES.DEBUG_LOGGING
-    EAGER_COMPILE_ENABLED = FEATURE_TOGGLES.EAGER_COMPILE
+    EAGER_GENERATION_ENABLED = FEATURE_TOGGLES.EAGER_GENERATION
     _debug_log("Debug logging enabled");
     if (FEATURE_TOGGLES.ENABLE_COMPRESSION) {
         $('#CompressData').show()
@@ -455,8 +455,8 @@ function _parse_get(get_arr) {
     if (GET_KEYS.enable_debug_logging in get_arr) {
         DEBUG_LOGGING_ENABLED = true;
     }
-    if (GET_KEYS.enable_eager_compile in get_arr) {
-        EAGER_COMPILE_ENABLED = true;
+    if (GET_KEYS.enable_eager_generation in get_arr) {
+        EAGER_GENERATION_ENABLED = true;
         _debug_log("Enabling Eager Compile.")
     }
     _debug_log("Debug Logging enabled");
@@ -663,8 +663,8 @@ function select(item, id, backend) {
     }
 
     if (!backend) {
-        if(FEATURE_TOGGLES.EAGER_COMPILE) {
-            eager_compile(id, index, `option${id}`) // TODO: test re-aranging rows and then triggering
+        if(FEATURE_TOGGLES.EAGER_GENERATION) {
+            eager_generation(id, index, `option${id}`) // TODO: test re-aranging rows and then triggering
         }
         else {
             markDirty()
@@ -742,10 +742,10 @@ function should_compress(should_redirect) {
     }
 }
 
-function eager_compile(changed_id, changed_index, changed_key) {
+function eager_generation(changed_id, changed_index, changed_key) {
     _debug_log("Asked to Eager Gen: ", changed_id, changed_index, changed_key)
     markDirty();
-    if (!EAGER_COMPILE_ENABLED) {
+    if (!EAGER_GENERATION_ENABLED) {
         return;
     }
 
@@ -833,36 +833,36 @@ function destroy(id) {
 
     var index = $(`#shortcu${id} .js-index`).val()
 
-    eager_compile( changed_id, index, 'DELETE');
+    eager_generation( changed_id, index, 'DELETE');
 }
 
 function setHotKey(id, backend) {
     $('#optionsShortcut' + id).html(genHotkeyRegion(id))
     _register_done_typing('#optionsShortcut' + id, id);
     if (!backend) {
-        eager_compile()
+        eager_generation()
     }
 }
 
 function _register_done_typing(parent_identifier, id) {
-    if (!EAGER_COMPILE_ENABLED) {
+    if (!EAGER_GENERATION_ENABLED) {
         return
     }
     _debug_log("Registering donetyping");
     var inputs = $(`${parent_identifier} .js_donetyping`);
     _debug_log('Inputs: ', inputs);
-    inputs.donetyping(function () { eager_compile($(this).attr('id'), id, $(this).attr('name').replace(/\d*$/g, '')); $(this).focus() });
+    inputs.donetyping(function () { eager_generation($(this).attr('id'), id, $(this).attr('name').replace(/\d*$/g, '')); $(this).focus() });
 }
 
 function genHotkeyRegion(id) {
-    var _handle_change = (EAGER_COMPILE_ENABLED) ? '' : 'oninput="markDirty()"';
-    var _register_change = (EAGER_COMPILE_ENABLED) ? 'js_donetyping' : '';
+    var _handle_change = (EAGER_GENERATION_ENABLED) ? '' : 'oninput="markDirty()"';
+    var _register_change = (EAGER_GENERATION_ENABLED) ? 'js_donetyping' : '';
     return `{% include _trigger_hotkey.html %}`.format(id);
 }
 
 function setHotString(id, backend) {
-    var _handle_change = (EAGER_COMPILE_ENABLED) ? '' : 'onchange="markDirty()"';
-    var _register_change = (EAGER_COMPILE_ENABLED) ? 'js_donetyping' : '';
+    var _handle_change = (EAGER_GENERATION_ENABLED) ? '' : 'onchange="markDirty()"';
+    var _register_change = (EAGER_GENERATION_ENABLED) ? 'js_donetyping' : '';
 
     _debug_log("configuring #optionsShortcut" + id)
     $('#optionsShortcut' + id).html(`<div class="w3-col s6">
@@ -870,7 +870,7 @@ function setHotString(id, backend) {
                                             </div>`)
     _register_done_typing("#optionsShortcut" + id, id);
     if (!backend) {
-        eager_compile()
+        eager_generation()
     }
 }
 
