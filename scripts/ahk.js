@@ -920,6 +920,7 @@ function _prevent_default() {
 }
 
 function copy_share_link(caller) {
+    _log_shared()
     var parent = $(caller).parent()
     var copyText = parent.find('.js_share_link')
     copyText.select()
@@ -932,6 +933,14 @@ function copy_share_link(caller) {
     tooltip.show()
 
     window.setTimeout(() => {tooltip.fadeOut('slow')}, 1e3)
+}
+
+function _log_shared() {
+    try {
+        ga('send', 'event', { eventCategory: 'AHK', eventAction: 'Share', eventLabel: 'Share', eventValue: 1 });
+    } catch (error) {
+        // pass
+    }
 }
 
 try {

@@ -18,8 +18,8 @@ layout: basic
     <option value="{{ digit }}"></option>{% endfor %}
 </datalist>
 <a id="downloadLink" href='#downloadLink' download="hotkeys.ahk" class="w3-hide">download</a>
-<a id="fbShareLink" href='#downloadLink' target="_blank" class="w3-hide"></a>
-<a id="emailShareLink" href='#downloadLink' target="_blank" class="w3-hide"></a>
+<a id="fbShareLink" href='#downloadLink' onclick="_log_shared()" target="_blank" class="w3-hide"></a>
+<a id="emailShareLink" href='#downloadLink' onclick="_log_shared()" target="_blank" class="w3-hide"></a>
 
 <form id="hotkeyForm">
     <input type="hidden" id="indexes" name="indexes" value="" />
