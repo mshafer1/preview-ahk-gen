@@ -457,7 +457,7 @@ function _parse_get(get_arr) {
     }
     if (GET_KEYS.enable_eager_generation in get_arr) {
         EAGER_GENERATION_ENABLED = true;
-        _debug_log("Enabling Eager Compile.")
+        _debug_log("Enabling Eager generation.")
     }
     _debug_log("Debug Logging enabled");
     if (!('length' in get_arr) && !('indexes' in get_arr)) {
@@ -526,7 +526,19 @@ function _check_form(show_error = true, check_required_fields = false, should_re
     }
 
     // Shorten URL
-    result = should_compress(should_redirect);
+    if (should_compress(false) && should_redirect) {
+        var form = $(`#hotkeyForm`)[0];
+        var data = new FormData(form);
+        var querystring = new URLSearchParams(data).toString();
+        
+        if(EAGER_GENERATION_ENABLED) {
+            querystring = _get_shortened_url(querystring);
+            window.history.pushState({ "updatedfield": -1, "index": -1, "changed_key": "compression" }, "AHK Generator", "/?" + querystring);
+        } else {
+            window.location.href = '/?' + _get_shortened_url(queryString)
+        }
+        return false;
+    }
 
     return result; // return false to cancel form action
 }
@@ -718,9 +730,6 @@ function should_compress(should_redirect) {
     _debug_log("QueryString:", queryString);
 
     if (user_requested_shortened) {
-        if (should_redirect) {
-            window.location.href = '/?' + _get_shortened_url(queryString)
-        }
         return true
     }
 
@@ -825,8 +834,6 @@ function _update_fields(state, config) {
     //     // handle text
     //     $(`#${state.updatedfield}`).val(new_value);
     // }
-
-
 }
 
 function destroy(id) {
