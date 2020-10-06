@@ -15,6 +15,16 @@ describe('_load_get', () => {
             .toEqual(empty);
     });
 
+    it('returns empty for empty query (?)', () => {
+        expect(ahk_js._load_get('ahkgen.com/?'))
+            .toEqual(empty);
+    });
+
+    it('returns empty for empty query (?indexes=)', () => {
+        expect(ahk_js._load_get('ahkgen.com/?indexes='))
+            .toEqual({'indexes': ''});
+    });
+
     it('takes values into object', () => {
         expect(ahk_js._load_get('ahkgen.com/?length=0'))
             .toEqual({ 'length': "0" });

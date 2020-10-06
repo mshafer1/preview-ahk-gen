@@ -235,6 +235,10 @@ function replaceAll(str, find, replace) { // from https://stackoverflow.com/a/11
 function _load_get(location) {
     var result = {}
 
+    if (location.indexOf('=') == -1) {
+        return result;
+    }
+
     if (location.indexOf('compressed=') != -1) {
         _debug_log("Original query string: ", location)
         var values = location.split('?')[1].split('&')
@@ -780,12 +784,18 @@ function eager_generation(changed_id, changed_index, changed_key) {
     var get_arry = _load_get(`/?${querystring}`);
     _debug_log('get_array', get_arry);
 
-    if ('error' in get_arry) {
+    if ('ERROR' in get_arry) {
         _debug_log('ERRORS: ', get_arry['error'])
         return;
     }
 
     var config = _parse_get(get_arry);
+
+    if ('ERROR' in config) {
+        _debug_log('ERRORS: ', config['error'])
+        return;
+    }
+
     CONFIG = config // there are still some references to the global
     _setup_download(config);
 
