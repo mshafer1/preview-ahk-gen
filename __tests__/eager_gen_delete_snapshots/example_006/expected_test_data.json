@@ -53,16 +53,5 @@
                 "input4": "\u2684"
             }
         }
-    },
-    "5": {
-        "trigger_type": "KEY",
-        "comment": "",
-        "trigger_keys": "6",
-        "action": {
-            "function": "Replace(\"\\{input5\\}\")",
-            "args": {
-                "input5": "\u2685"
-            }
-        }
     }
 }

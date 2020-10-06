@@ -1,13 +1,1 @@
-{
-    "0": {
-        "trigger_type": "KEY",
-        "comment": "",
-        "trigger_keys": "MButton",
-        "action": {
-            "function": "Custom: \\{Code0\\}",
-            "args": {
-                "Code0": "Send {PgDn}"
-            }
-        }
-    }
-}
+{}

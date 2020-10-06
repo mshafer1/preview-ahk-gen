@@ -9,16 +9,5 @@
                 "input0": "k"
             }
         }
-    },
-    "1": {
-        "trigger_type": "KEY",
-        "comment": "",
-        "trigger_keys": "RButton",
-        "action": {
-            "function": "Send(\"\\{input1\\}\")",
-            "args": {
-                "input1": "l"
-            }
-        }
     }
 }

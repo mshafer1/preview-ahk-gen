@@ -35,7 +35,7 @@ def test__url__deleting_last__yields_expected_data(
     browser.get(base_url.rstrip("/") + "/" + url.lstrip("/"))
     time.sleep(0.5)
     
-    # browser.execute_script("$('button i.fa-times-circle:last').click()")
+    browser.execute_script("$('button i.fa-times-circle:last').click()")
     time.sleep(0.5)
 
     data = loaded_data(browser, parser)
