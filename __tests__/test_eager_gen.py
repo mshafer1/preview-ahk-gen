@@ -67,3 +67,21 @@ def test__single_row_url__select_method__yields_desired_data_and_updates_script(
     assert data["0"]["action"] == {"function": 'OpenConfig()', "args": {}}
     assert old_script != new_script
 
+
+# triggers sort handler: 
+
+@pytest.mark.parametrize(
+    "test_name,url", (*[(key, value) for key, value in test_data.basic_test_cases.items() if value is not '/'],),
+)
+def test__single_row_url_marked_dirty__sort_update__marks_clean(
+    test_name, url, base_url, parser, browser, eager_generation_browser
+):
+    browser.get(base_url.rstrip("/") + "/" + url.lstrip("/"))
+    time.sleep(0.5)
+    browser.execute_script("markDirty()")
+    assert 'grayout' in browser.find_elements_by_id('scriptZone')[0].get_attribute('class').split()
+
+    browser.execute_script("$('#hotkeyRegion').sortable('option', 'update')();")
+    time.sleep(0.5)
+
+    assert 'grayout' not in browser.find_elements_by_id('scriptZone')[0].get_attribute('class').split()
