@@ -281,6 +281,9 @@ function _load_get(location) {
 
     for (var i = 0, l = query.length; i < l; i++) {
         aux = decodeURIComponent(query[i])
+        if (!(aux.includes('='))) {
+            continue
+        }
         _debug_log(aux)
         key = aux.match(/([\d\D]+?\=)/)[0].replace('=', '');
         _debug_log(key)
@@ -870,7 +873,12 @@ function _register_done_typing(parent_identifier, id) {
     _debug_log("Registering donetyping");
     var inputs = $(`${parent_identifier} .js_donetyping`);
     _debug_log('Inputs: ', inputs);
-    inputs.donetyping(function () { eager_generation($(this).attr('id'), id, $(this).attr('name').replace(/\d*$/g, '')); $(this).focus() });
+    inputs.donetyping(function () {
+        var name = $(this).attr('name')
+        name = (typeof(name) !== 'undefined')? name.replace(/\d*$/g, ''):'';
+        eager_generation($(this).attr('id'), id, name); 
+        $(this).focus()
+    });
 }
 
 function genHotkeyRegion(id) {

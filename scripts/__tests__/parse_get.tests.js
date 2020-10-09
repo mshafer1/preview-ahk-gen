@@ -45,6 +45,11 @@ describe('_load_get', () => {
             .toEqual({ 'skey0': ['CTRL', 'ALT'] })
     });
 
+    it('drops missing `=` sign keys', () => {
+        expect(ahk_js._load_get('ahkgen.com/?indexes=0&comment0&func0=STRING&skeyValue0=1&input0=1&option0=Send'))
+            .toEqual({ 'indexes': "0", 'func0': 'STRING', 'skeyValue0': "1", 'input0': "1", 'option0': 'Send' })
+    });
+
     it('takes a basic query and returns expected data', () => {
         const result = ahk_js
             ._load_get('ahkgen.com/?length=1&comment0=&func0=KEY&skeyValue0=a&input0=b&option0=Replace');
@@ -321,6 +326,13 @@ describe('_parse_get', () => {
                 ))
             expect(result).toMatchSnapshot();
         });
+        it('handles missing comment `=`', () => {
+            const result = ahk_js
+                ._parse_get(ahk_js._load_get(
+                    'ahkgen.com/?indexes=0&comment0&func0=STRING&skeyValue0=1&input0=1&option0=Send'
+                ))
+            expect(result).toMatchSnapshot();
+        })
     })
 
     describe('Handles indexes correctly', () => {
