@@ -1,0 +1,24 @@
+# tests
+
+verify eager-gen works on changing select action ✓
+
+eager-gen deleting rows doesn't re-insert last row ✓
+ - http://localhost:4000/?indexes=0%2C1%2C2%2C3&comment0=+%3Bconfig+%3D+open+this+page&func0=STRING&skeyValue0=%60%3Bconfig&option0=OpenConfig&comment1=CTRL+%2B+Alt+%2B+i+%3D+chrome+%28internet%29&func1=KEY&skey1%5B%5D=CTRL&skey1%5B%5D=ALT&skeyValue1=i&Window1=-+Google+Chrome&Program1=chrome.exe&option1=ActivateOrOpen&comment2=CTRL+%2B+Alt+%2B+v+%3D+Visual+Studio&func2=KEY&skey2%5B%5D=CTRL&skey2%5B%5D=ALT&skeyValue2=v&Window2=Visual+Studio&Program2=devenv.exe&option2=ActivateOrOpen&comment3=CTRL+%2B+Alt+%2B+p+%3D+putty&func3=KEY&skey3%5B%5D=CTRL&skey3%5B%5D=ALT&skeyValue3=p&Window3=ahk_exe+putty.exe&Program3=C%3A%5CProgram+Files+%28x86%29%5CPuTTY%5Cputty.exe&option3=ActivateOrOpen
+
+ problem is config parser packs down, so id's don't lign up after the deleted one (as the deleted id isn't "missing" in the config)
+ need to figure out how skip removed row when counting, or remove last row after updating others (not it),...
+
+✓ eager-gen reordering:
+- http://localhost:4000/?indexes=0%2C1%2C2%2C3%2C4&comment0=&func0=STRING&skeyValue0=1&input0=1&option0=Send&comment1=&func1=STRING&skeyValue1=2&input1=2&option1=Send&comment2=&func2=STRING&skeyValue2=3&input2=3&option2=Send&comment3=&func3=STRING&skeyValue3=4&input3=4&option3=Send&comment4=&func4=STRING&skeyValue4=5&input4=5&option4=Send
+
+
+
+✓ [eagergen] test - request compression, compress, and reloadable
+
+✓ [eagergen] if config grows too big, eager gen prompts (and handles) auto turning on compression
+
+✓ Share button - link back from FB doesn't work. Overly uri encoding??
+  was dropping equals for empty sections (`&comment0&`)
+
+✓ test that selecting to compress cuases it to actually compress
+
