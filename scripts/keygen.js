@@ -110,6 +110,7 @@ function keygen(data, location) {
 SendMode Input  ; Recommended for new scripts due to its superior speed and reliability.
 SetWorkingDir %A_ScriptDir%  ; Ensures a consistent starting directory.
 setTitleMatchMode, 2 ; set title match mode to "contains"
+DetectHiddenWindows, On ; as of 1.1.32.00, windows on other virtual desktops are treated as hidden
 
 ; this code was auto generated at:
 ; ${location}
@@ -121,6 +122,9 @@ setTitleMatchMode, 2 ; set title match mode to "contains"
 
     // append custom functions
     value += `
+
+
+
 ; *********************** Provided Functions ********************************
 OpenConfig()
 {
@@ -144,6 +148,7 @@ ActivateOrOpen(window, program)
 	if WinExist(window)
 	{
 		WinActivate  ; Uses the last found window.
+		WinShow ; if the window is hidden (or on another desktop), show it
 	}
 	else
 	{   ; else start requested program
