@@ -154,6 +154,10 @@ function init() {
         alert(CONFIG['ERROR'])
     }
 
+    if(window.location.href.includes("preview")) {
+        displayMessage("Redirecting to www.ahkgen.com", "Preview project has been retired (now that all features have been integrated into www). Press ok to redirect to www.", function() {window.location.replace(window.location.href.replace("preview", "www"))})
+    }
+    
     num_keys = Object.keys(CONFIG).length;
     if (num_keys == 0 || 'ERROR' in CONFIG) {
         _debug_log("New row")
